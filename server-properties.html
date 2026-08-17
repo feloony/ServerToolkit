@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Properties Editor — ServerToolkit</title>
+  <meta name="description" content="Edit and validate your Minecraft server.properties file.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/server-properties.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fas fa-server"></i></span>
+        ServerToolkit
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools" class="active">Tools</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
+        </ul>
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+    <div class="mobile-nav-menu">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="#tools"><i class="fas fa-tools"></i> Tools</a>
+      <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+      <a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="tool-page-header">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="fas fa-home"></i> Home</a>
+          <span><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i></span>
+          <span>Server Properties Editor</span>
+        </div>
+        <h1>Server Properties Editor</h1>
+        <p>Upload or paste your server.properties file, edit common settings, and download the modified file. All processing happens locally in your browser.</p>
+      </div>
+
+      <div class="tool-tabs">
+        <button class="tool-tab active" data-tab="paste"><i class="fas fa-paste"></i> Paste Contents</button>
+        <button class="tool-tab" data-tab="upload"><i class="fas fa-upload"></i> Upload File</button>
+      </div>
+
+      <div id="tab-paste" class="tab-content">
+        <div class="tool-panel" style="margin-bottom: 1.5rem;">
+          <div class="tool-panel-title"><i class="fas fa-code"></i> Raw Contents</div>
+          <textarea id="properties-raw" class="form-textarea" rows="8" placeholder="server-port=25565&#10;max-players=20&#10;motd=A Minecraft Server&#10;..."></textarea>
+        </div>
+      </div>
+
+      <div id="tab-upload" class="tab-content" style="display: none;">
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="properties-file" accept=".properties">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p style="font-weight: 600; margin-bottom: 0.25rem;">Click to upload server.properties</p>
+          <p style="font-size: 0.875rem; color: var(--text-muted);">or drag and drop the file here</p>
+        </div>
+      </div>
+
+      <div id="properties-parsed" style="display: none;">
+        <div class="tool-layout" style="margin-bottom: 1.5rem;">
+          <div class="tool-panel">
+            <div class="tool-panel-title"><i class="fas fa-list-check"></i> Common Settings</div>
+            <div id="known-settings"></div>
+          </div>
+          <div class="tool-panel">
+            <div class="tool-panel-title"><i class="fas fa-question-circle"></i> Unknown / Preserved Properties</div>
+            <div id="unknown-settings" class="properties-table-wrap"></div>
+          </div>
+        </div>
+
+        <div class="tool-panel" style="margin-bottom: 1.5rem;">
+          <div class="tool-panel-title"><i class="fas fa-file-export"></i> Generated Output</div>
+            <button class="btn btn-secondary btn-sm" id="properties-copy"><i class="fas fa-copy"></i> Copy</button>
+            <button class="btn btn-secondary btn-sm" id="properties-download"><i class="fas fa-download"></i> Download .properties</button>
+          <div class="code-output" id="properties-output"></div>
+          <div class="output-actions">
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fas fa-server"></i></span>
+            ServerToolkit
+          </a>
+          <p>Free, open-source tools for Minecraft server owners and developers.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="server-properties.html"><i class="fas fa-sliders-h"></i> Server Properties Editor</a></li>
+            <li><a href="motd.html"><i class="fas fa-palette"></i> MOTD Generator</a></li>
+            <li><a href="java-arguments.html"><i class="fas fa-microchip"></i> Java Arguments</a></li>
+            <li><a href="server-info.html"><i class="fas fa-signal"></i> Server Info</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Project</h4>
+          <ul>
+            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fas fa-file-contract"></i> License</a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>ServerToolkit v0.1.0</p>
+        <p>&copy; <span class="footer-year">2026</span> ServerToolkit. Open source under MIT License.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    (function () {
+      const knownKeys = [
+        { key: "server-port", label: "Server Port", type: "number", min: 1, max: 65535 },
+        { key: "server-ip", label: "Server IP", type: "text" },
+        { key: "max-players", label: "Max Players", type: "number", min: 1, max: 10000 },
+        { key: "gamemode", label: "Gamemode", type: "select", options: ["survival", "creative", "adventure", "spectator"] },
+        { key: "difficulty", label: "Difficulty", type: "select", options: ["peaceful", "easy", "normal", "hard"] },
+        { key: "online-mode", label: "Online Mode", type: "select", options: ["true", "false"] },
+        { key: "white-list", label: "White List", type: "select", options: ["true", "false"] },
+        { key: "pvp", label: "PVP", type: "select", options: ["true", "false"] },
+        { key: "hardcore", label: "Hardcore", type: "select", options: ["true", "false"] },
+        { key: "allow-flight", label: "Allow Flight", type: "select", options: ["true", "false"] },
+        { key: "view-distance", label: "View Distance", type: "number", min: 2, max: 32 },
+        { key: "simulation-distance", label: "Simulation Distance", type: "number", min: 2, max: 32 },
+        { key: "motd", label: "MOTD", type: "text" },
+        { key: "level-seed", label: "Level Seed", type: "text" },
+        { key: "level-name", label: "Level Name", type: "text" },
+        { key: "enable-command-block", label: "Enable Command Block", type: "select", options: ["true", "false"] },
+        { key: "spawn-protection", label: "Spawn Protection", type: "number", min: 0, max: 100 },
+        { key: "max-build-height", label: "Max Build Height", type: "number", min: 1, max: 256 },
+        { key: "spawn-animals", label: "Spawn Animals", type: "select", options: ["true", "false"] },
+        { key: "spawn-monsters", label: "Spawn Monsters", type: "select", options: ["true", "false"] },
+        { key: "spawn-npcs", label: "Spawn NPCs", type: "select", options: ["true", "false"] },
+        { key: "generate-structures", label: "Generate Structures", type: "select", options: ["true", "false"] },
+        { key: "allow-nether", label: "Allow Nether", type: "select", options: ["true", "false"] },
+        { key: "enable-query", label: "Enable Query", type: "select", options: ["true", "false"] },
+        { key: "enable-rcon", label: "Enable RCON", type: "select", options: ["true", "false"] },
+        { key: "rcon.password", label: "RCON Password", type: "text" },
+        { key: "op-permission-level", label: "OP Permission Level", type: "number", min: 1, max: 4 },
+        { key: "function-permission-level", label: "Function Permission Level", type: "number", min: 1, max: 4 },
+        { key: "max-tick-time", label: "Max Tick Time (ms)", type: "number", min: 0 },
+        { key: "max-world-size", label: "Max World Size", type: "number", min: 1, max: 29999984 },
+      ];
+
+      const knownKeyMap = {};
+      knownKeys.forEach(k => knownKeyMap[k.key] = k);
+
+      let propertiesData = {};
+
+      function parseProperties(text) {
+        const result = {};
+        const lines = text.split(/\r?\n/);
+        lines.forEach(line => {
+          line = line.trim();
+          if (!line || line.startsWith("#")) return;
+          const eqIdx = line.indexOf("=");
+          if (eqIdx === -1) return;
+          const key = line.slice(0, eqIdx).trim();
+          const value = line.slice(eqIdx + 1).trim();
+          if (key) result[key] = value;
+        });
+        return result;
+      }
+
+      function serializeProperties(data) {
+        const lines = [];
+        for (const [key, value] of Object.entries(data)) {
+          lines.push(`${key}=${value}`);
+        }
+        return lines.join("\n");
+      }
+
+      function renderEditor() {
+        const knownContainer = document.getElementById("known-settings");
+        const unknownContainer = document.getElementById("unknown-settings");
+        knownContainer.innerHTML = "";
+        unknownContainer.innerHTML = "";
+
+        const knownKeysFound = [];
+        const unknownKeysFound = [];
+
+        Object.keys(propertiesData).forEach(key => {
+          if (knownKeyMap[key]) {
+            knownKeysFound.push(key);
+          } else {
+            unknownKeysFound.push(key);
+          }
+        });
+
+        knownKeys.forEach(def => {
+          const value = propertiesData[def.key] !== undefined ? propertiesData[def.key] : "";
+          const wrapper = document.createElement("div");
+          wrapper.className = "form-group";
+
+          const label = document.createElement("label");
+          label.textContent = def.label;
+          wrapper.appendChild(label);
+
+          let input;
+          if (def.type === "select") {
+            input = document.createElement("select");
+            input.className = "form-select";
+            def.options.forEach(opt => {
+              const option = document.createElement("option");
+              option.value = opt;
+              option.textContent = opt;
+              if (value === opt) option.selected = true;
+              input.appendChild(option);
+            });
+          } else if (def.type === "number") {
+            input = document.createElement("input");
+            input.type = "number";
+            input.className = "form-input";
+            input.value = value;
+            if (def.min !== undefined) input.min = def.min;
+            if (def.max !== undefined) input.max = def.max;
+          } else {
+            input = document.createElement("input");
+            input.type = "text";
+            input.className = "form-input";
+            input.value = value;
+          }
+
+          input.dataset.key = def.key;
+          input.addEventListener("input", () => {
+            propertiesData[def.key] = input.value;
+            updateOutput();
+          });
+
+          wrapper.appendChild(input);
+          knownContainer.appendChild(wrapper);
+        });
+
+        if (unknownKeysFound.length > 0) {
+          unknownKeysFound.forEach(key => {
+            const row = document.createElement("div");
+            row.className = "info-row";
+            row.innerHTML = `<span class="info-label">${key}</span><span class="info-value unknown">${propertiesData[key]}</span>`;
+            unknownContainer.appendChild(row);
+          });
+        } else {
+          unknownContainer.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i><p>No unknown properties.</p></div>';
+        }
+
+        updateOutput();
+      }
+
+      function updateOutput() {
+        const output = document.getElementById("properties-output");
+        output.textContent = serializeProperties(propertiesData);
+      }
+
+      function loadFromText(text) {
+        propertiesData = parseProperties(text);
+        document.getElementById("properties-parsed").style.display = "block";
+        renderEditor();
+        if (window.showToast) {
+          showToast("Properties loaded", "success");
+        }
+      }
+
+      const rawTextarea = document.getElementById("properties-raw");
+      rawTextarea.addEventListener("input", () => {
+        if (rawTextarea.value.trim()) {
+          loadFromText(rawTextarea.value);
+        }
+      });
+
+      document.getElementById("properties-file").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          rawTextarea.value = ev.target.result;
+          loadFromText(ev.target.result);
+        };
+        reader.readAsText(file);
+      });
+
+      const uploadZone = document.getElementById("upload-zone");
+      uploadZone.addEventListener("click", () => document.getElementById("properties-file").click());
+
+      uploadZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadZone.style.borderColor = "var(--accent)";
+      });
+
+      uploadZone.addEventListener("dragleave", () => {
+        uploadZone.style.borderColor = "";
+      });
+
+      uploadZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadZone.style.borderColor = "";
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          rawTextarea.value = ev.target.result;
+          loadFromText(ev.target.result);
+        };
+        reader.readAsText(file);
+      });
+
+      document.querySelectorAll(".tool-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".tool-tab").forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
+          document.getElementById("tab-" + tab.dataset.tab).style.display = "block";
+        });
+      });
+
+      document.getElementById("properties-copy").addEventListener("click", () => {
+        const text = serializeProperties(propertiesData);
+        if (!text) {
+          if (window.showToast) showToast("No properties to copy", "error");
+          return;
+        }
+        if (window.copyToClipboard) copyToClipboard(text, "Properties copied to clipboard");
+      });
+
+      document.getElementById("properties-download").addEventListener("click", () => {
+        const text = serializeProperties(propertiesData);
+        if (!text) {
+          if (window.showToast) showToast("No properties to download", "error");
+          return;
+        }
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "server.properties";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        if (window.showToast) showToast("File downloaded", "success");
+      });
+    })();
+  </script>
+</body>
+</html>

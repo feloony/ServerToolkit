@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOTD Generator — ServerToolkit</title>
+  <meta name="description" content="Create and preview Minecraft server MOTDs with colors and formatting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .tool-page-header {
+      padding: 2.5rem 0 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--text);
+    }
+
+    .tool-page-header h1 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .tool-page-header p {
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      max-width: 700px;
+    }
+
+    .tool-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .tool-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .tool-panel-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.375rem;
+      color: var(--text);
+    }
+
+    .form-textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.625rem 0.875rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+      resize: vertical;
+      min-height: 100px;
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .color-palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .color-swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.8);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.1);
+      border-color: var(--accent);
+    }
+
+    .format-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .format-chip {
+      padding: 0.4rem 0.8rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .format-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--surface-hover);
+    }
+
+    .code-output {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      word-break: break-all;
+      color: var(--text);
+      white-space: pre-wrap;
+      min-height: 40px;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .server-list-preview {
+      background: #c6c6c6;
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 480px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    .server-list-header {
+      background: linear-gradient(to bottom, #787878, #585858);
+      padding: 0.5rem 1rem;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .server-list-item {
+      background: #c6c6c6;
+      padding: 0.5rem 1rem;
+      border-top: 2px solid #fff;
+      border-bottom: 2px solid #555;
+    }
+
+    .server-list-item-inner {
+      background: #dedede;
+      border: 2px solid #fff;
+      border-bottom-color: #888;
+      border-right-color: #888;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .server-list-motd {
+      color: #000;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      font-family: 'Courier New', monospace;
+    }
+
+    .server-list-players {
+      text-align: right;
+      color: #000;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .server-list-players strong {
+      font-size: 1rem;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .tool-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fas fa-server"></i></span>
+        ServerToolkit
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools" class="active">Tools</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
+        </ul>
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+    <div class="mobile-nav-menu">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="#tools"><i class="fas fa-tools"></i> Tools</a>
+      <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+      <a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="tool-page-header">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="fas fa-home"></i> Home</a>
+          <span><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i></span>
+          <span>MOTD Generator</span>
+        </div>
+        <h1>MOTD Generator</h1>
+        <p>Create and preview Minecraft server MOTDs with colors and formatting. Supports both § and & color codes.</p>
+      </div>
+
+      <div class="tool-layout">
+        <div class="tool-panel">
+          <div class="tool-panel-title"><i class="fas fa-palette"></i> Editor</div>
+          <div class="form-group">
+            <label for="motd-input">MOTD Text</label>
+            <textarea id="motd-input" class="form-textarea" rows="4" placeholder="Enter your MOTD here..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-fill-drip"></i> Colors</label>
+            <div class="color-palette" id="color-palette"></div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-bold"></i> Formatting</label>
+            <div class="format-chips" id="format-chips"></div>
+          </div>
+
+          <div class="output-actions">
+            <button class="btn btn-secondary btn-sm" id="motd-copy"><i class="fas fa-copy"></i> Copy Output</button>
+            <button class="btn btn-secondary btn-sm" id="motd-reset"><i class="fas fa-undo"></i> Reset</button>
+          </div>
+
+          <div class="form-group" style="margin-top: 1.25rem; margin-bottom: 0;">
+            <label for="motd-output"><i class="fas fa-code"></i> Generated Output</label>
+            <div class="code-output" id="motd-output">&nbsp;</div>
+          </div>
+        </div>
+
+        <div class="tool-panel">
+          <div class="tool-panel-title"><i class="fas fa-eye"></i> Live Preview</div>
+          <div class="server-list-preview">
+            <div class="server-list-header">
+              <i class="fas fa-signal"></i> Minecraft Server
+            </div>
+            <div class="server-list-item">
+              <div class="server-list-item-inner">
+                <div class="server-list-motd" id="motd-preview">
+                  <span style="color: #8b949e; font-style: italic;">Your MOTD preview will appear here...</span>
+                </div>
+                <div class="server-list-players">
+                  <strong>0</strong>
+                  / 20
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-icon"><i class="fas fa-server"></i></span>
+            ServerToolkit
+          </a>
+          <p>Free, open-source tools for Minecraft server owners and developers.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="server-properties.html"><i class="fas fa-sliders-h"></i> Server Properties Editor</a></li>
+            <li><a href="motd.html"><i class="fas fa-palette"></i> MOTD Generator</a></li>
+            <li><a href="java-arguments.html"><i class="fas fa-microchip"></i> Java Arguments</a></li>
+            <li><a href="server-info.html"><i class="fas fa-signal"></i> Server Info</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Project</h4>
+          <ul>
+            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fas fa-file-contract"></i> License</a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>ServerToolkit v0.1.0</p>
+        <p>&copy; <span class="footer-year">2026</span> ServerToolkit. Open source under MIT License.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/motd.js"></script>
+</body>
+</html>
