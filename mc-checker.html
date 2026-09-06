@@ -181,16 +181,17 @@
       margin-bottom: 8px;
     }
     .motd-box {
-      background: #12161f;
+      background: #000000;
       border: 1px solid #1e2638;
       border-radius: 10px;
       padding: 16px;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.9rem;
-      color: #cbd5e1;
+      font-family: 'Minecraft', 'Courier New', monospace;
+      font-size: 1rem;
+      color: #ffffff;
       white-space: pre-wrap;
       word-break: break-word;
       line-height: 1.5;
+      text-shadow: 2px 2px 0px #000000;
     }
     .loader {
       display: none;
@@ -245,7 +246,7 @@
 
         <div class="section-header" style="text-align: left; margin-bottom: 24px;">
           <h1 class="section-title">Server Status Checker</h1>
-          <p class="section-subtitle">Check real-time status, live player counts, MOTD, and protocol version of any Minecraft Java or Bedrock server.</p>
+          <p class="section-subtitle">Check real-time status, live player counts, colored MOTD, and protocol version of any Minecraft server.</p>
         </div>
 
         <div class="checker-card">
@@ -344,6 +345,20 @@
       checkStatus();
     }
 
+    function renderMotdHtml(motdData) {
+      if (!motdData) return 'No MOTD provided.';
+      
+      if (motdData.html && motdData.html.length > 0) {
+        return motdData.html.join('<br>');
+      }
+      
+      if (motdData.clean && motdData.clean.length > 0) {
+        return motdData.clean.join('<br>');
+      }
+
+      return 'No MOTD provided.';
+    }
+
     async function checkStatus() {
       const ip = document.getElementById('serverIp').value.trim();
       const loader = document.getElementById('loader');
@@ -386,14 +401,7 @@
 
           serverVersion.textContent = data.version || 'Java Server';
           
-          let motdText = 'No MOTD provided.';
-          if (data.motd && data.motd.clean && data.motd.clean.length > 0) {
-            motdText = data.motd.clean.join('\n');
-          } else if (data.motd && data.motd.raw && data.motd.raw.length > 0) {
-            motdText = data.motd.raw.join('\n');
-          }
-          
-          serverMotd.textContent = motdText;
+          serverMotd.innerHTML = renderMotdHtml(data.motd);
           serverIcon.src = data.icon || `https://eu.mc-api.net/v3/server/favicon/${ip}`;
         } else {
           statusBadge.textContent = 'Offline / Unreachable';
@@ -401,7 +409,7 @@
           playerCount.textContent = '0 / 0';
           playerBar.style.width = '0%';
           serverVersion.textContent = 'N/A';
-          serverMotd.textContent = 'Could not reach the server. Make sure the server is online and the IP address is correct.';
+          serverMotd.innerHTML = '<span style="color: #ef4444;">Could not reach the server. Make sure the server is online and the IP address is correct.</span>';
           serverIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="%238b95a7" stroke-width="2"><path d="M18.364 5.636a9 9 0 0 1 0 12.728M5.636 5.636a9 9 0 0 0 0 12.728M12 2v20"/></svg>';
         }
       } catch (error) {
