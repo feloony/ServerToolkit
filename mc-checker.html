@@ -11,61 +11,113 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    .checker-card {
-      background: var(--card-bg, #12161f);
-      border: 1px solid var(--border-color, #1e2638);
-      border-radius: 16px;
-      padding: 28px;
-      max-width: 600px;
+    .checker-wrapper {
+      max-width: 800px;
       margin: 0 auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      padding: 0 16px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #8b95a7;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: #6366f1;
+    }
+    .checker-card {
+      background: rgba(18, 22, 31, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
     .input-group {
       display: flex;
-      gap: 10px;
-      margin: 20px 0;
+      gap: 12px;
+      margin-top: 24px;
     }
     .input-group input {
       flex: 1;
-      padding: 12px 16px;
-      background: #090b0e;
+      padding: 14px 18px;
+      background: rgba(9, 11, 14, 0.8);
       border: 1px solid #232b3e;
-      border-radius: 10px;
+      border-radius: 12px;
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
     }
     .input-group input:focus {
       border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .presets {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .preset-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .preset-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      color: #cbd5e1;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .preset-btn:hover {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: #6366f1;
+      color: #fff;
     }
     .result-box {
       display: none;
-      background: #090b0e;
+      background: rgba(9, 11, 14, 0.9);
       border: 1px solid #1e2638;
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 20px;
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 28px;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .status-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-      padding-bottom: 16px;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
       border-bottom: 1px solid #1e2638;
     }
     .server-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
       background: #12161f;
       border: 1px solid #232b3e;
       object-fit: contain;
     }
     .badge {
       display: inline-block;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
       font-size: 0.75rem;
       font-weight: 700;
@@ -84,14 +136,14 @@
     }
     .info-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .info-box {
       background: #12161f;
-      padding: 10px 14px;
-      border-radius: 8px;
+      padding: 12px 16px;
+      border-radius: 10px;
       border: 1px solid #1e2638;
     }
     .info-label {
@@ -101,26 +153,59 @@
       margin-bottom: 4px;
     }
     .info-value {
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 600;
       color: #f1f5f9;
+    }
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: #1e2638;
+      border-radius: 3px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #10b981);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .motd-container {
+      margin-top: 16px;
+    }
+    .motd-label {
+      font-size: 0.75rem;
+      color: #8b95a7;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
     .motd-box {
       background: #12161f;
       border: 1px solid #1e2638;
-      border-radius: 8px;
-      padding: 12px;
-      font-family: monospace;
-      font-size: 0.85rem;
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9rem;
       color: #cbd5e1;
       white-space: pre-wrap;
       word-break: break-word;
+      line-height: 1.5;
     }
     .loader {
       display: none;
       text-align: center;
       color: #8b95a7;
-      padding: 10px 0;
+      padding: 20px 0;
+      font-weight: 500;
+    }
+    @media (max-width: 600px) {
+      .input-group {
+        flex-direction: column;
+      }
+      .checker-card {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -133,8 +218,8 @@
       </a>
       <nav>
         <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="index.html#tools" class="active">Tools</a></li>
+          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="index.html#tools" class="active"><i class="fas fa-tools"></i> All Tools</a></li>
           <li><a href="index.html#about">About</a></li>
           <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
         </ul>
@@ -147,7 +232,7 @@
     </div>
     <div class="mobile-nav-menu">
       <a href="index.html"><i class="fas fa-home"></i> Home</a>
-      <a href="index.html#tools"><i class="fas fa-tools"></i> Tools</a>
+      <a href="index.html#tools"><i class="fas fa-tools"></i> All Tools</a>
       <a href="index.html#about"><i class="fas fa-info-circle"></i> About</a>
       <a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
     </div>
@@ -155,41 +240,62 @@
 
   <main>
     <section class="section">
-      <div class="container">
-        <div class="section-header">
+      <div class="checker-wrapper">
+        <a href="index.html#tools" class="back-link"><i class="fas fa-arrow-left"></i> Back to Tools</a>
+
+        <div class="section-header" style="text-align: left; margin-bottom: 24px;">
           <h1 class="section-title">Server Status Checker</h1>
-          <p class="section-subtitle">Check real-time player counts, MOTD, and status instantly.</p>
+          <p class="section-subtitle">Check real-time status, live player counts, MOTD, and protocol version of any Minecraft Java or Bedrock server.</p>
         </div>
 
         <div class="checker-card">
+          <label for="serverIp" style="font-weight: 600; color: #f1f5f9; font-size: 0.95rem;">Enter Server IP Address</label>
           <div class="input-group">
-            <input type="text" id="serverIp" placeholder="e.g. play.hypixel.net" />
-            <button class="btn btn-primary" onclick="checkStatus()"><i class="fas fa-search"></i> Check</button>
+            <input type="text" id="serverIp" placeholder="e.g. play.hypixel.net or jartex.fun" onkeydown="if(event.key==='Enter') checkStatus()" />
+            <button class="btn btn-primary" onclick="checkStatus()"><i class="fas fa-search"></i> Check Server</button>
           </div>
 
-          <div class="loader" id="loader"><i class="fas fa-spinner fa-spin"></i> Fetching server details...</div>
+          <div class="presets">
+            <span class="preset-label">Try popular:</span>
+            <button class="preset-btn" onclick="quickCheck('mc.hypixel.net')">Hypixel</button>
+            <button class="preset-btn" onclick="quickCheck('top.jartex.fun')">Jartex</button>
+            <button class="preset-btn" onclick="quickCheck('play.minemen.club')">Minemen</button>
+            <button class="preset-btn" onclick="quickCheck('play.cubecraft.net')">CubeCraft</button>
+          </div>
+
+          <div class="loader" id="loader"><i class="fas fa-spinner fa-spin"></i> Pinged server... fetching live details</div>
 
           <div class="result-box" id="resultCard">
             <div class="status-header">
-              <img id="serverIcon" class="server-icon" src="" alt="Icon" />
+              <img id="serverIcon" class="server-icon" src="" alt="Server Icon" />
               <div>
-                <div id="serverHost" style="font-weight: 700; font-size: 1.1rem;">-</div>
+                <div id="serverHost" style="font-weight: 700; font-size: 1.2rem; color: #fff;">-</div>
                 <span id="statusBadge" class="badge">-</span>
               </div>
             </div>
 
             <div class="info-grid">
               <div class="info-box">
-                <div class="info-label">Players</div>
+                <div class="info-label">Live Players</div>
                 <div class="info-value" id="playerCount">-</div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" id="playerBar"></div>
+                </div>
               </div>
               <div class="info-box">
                 <div class="info-label">Version</div>
                 <div class="info-value" id="serverVersion">-</div>
               </div>
+              <div class="info-box">
+                <div class="info-label">IP / Port</div>
+                <div class="info-value" id="serverIpDisplay">-</div>
+              </div>
             </div>
 
-            <div class="motd-box" id="serverMotd">-</div>
+            <div class="motd-container">
+              <div class="motd-label">Server Message of the Day (MOTD)</div>
+              <div class="motd-box" id="serverMotd">-</div>
+            </div>
           </div>
         </div>
       </div>
@@ -233,6 +339,11 @@
 
   <script src="assets/js/main.js"></script>
   <script>
+    function quickCheck(ip) {
+      document.getElementById('serverIp').value = ip;
+      checkStatus();
+    }
+
     async function checkStatus() {
       const ip = document.getElementById('serverIp').value.trim();
       const loader = document.getElementById('loader');
@@ -253,19 +364,29 @@
         const statusBadge = document.getElementById('statusBadge');
         const serverHost = document.getElementById('serverHost');
         const playerCount = document.getElementById('playerCount');
+        const playerBar = document.getElementById('playerBar');
         const serverVersion = document.getElementById('serverVersion');
+        const serverIpDisplay = document.getElementById('serverIpDisplay');
         const serverMotd = document.getElementById('serverMotd');
         const serverIcon = document.getElementById('serverIcon');
 
         serverHost.textContent = data.hostname || data.ip;
+        serverIpDisplay.textContent = `${data.ip}:${data.port || 25565}`;
 
         if (data.online) {
           statusBadge.textContent = 'Online';
           statusBadge.className = 'badge online';
-          playerCount.textContent = `${data.players.online} / ${data.players.max}`;
-          serverVersion.textContent = data.version || 'Unknown';
           
-          let motdText = 'No MOTD available.';
+          const onlinePlayers = data.players ? data.players.online : 0;
+          const maxPlayers = data.players ? data.players.max : 0;
+          playerCount.textContent = `${onlinePlayers.toLocaleString()} / ${maxPlayers.toLocaleString()}`;
+          
+          const percent = maxPlayers > 0 ? (onlinePlayers / maxPlayers) * 100 : 0;
+          playerBar.style.width = `${Math.min(percent, 100)}%`;
+
+          serverVersion.textContent = data.version || 'Java Server';
+          
+          let motdText = 'No MOTD provided.';
           if (data.motd && data.motd.clean && data.motd.clean.length > 0) {
             motdText = data.motd.clean.join('\n');
           } else if (data.motd && data.motd.raw && data.motd.raw.length > 0) {
@@ -275,16 +396,17 @@
           serverMotd.textContent = motdText;
           serverIcon.src = data.icon || `https://eu.mc-api.net/v3/server/favicon/${ip}`;
         } else {
-          statusBadge.textContent = 'Offline';
+          statusBadge.textContent = 'Offline / Unreachable';
           statusBadge.className = 'badge offline';
           playerCount.textContent = '0 / 0';
+          playerBar.style.width = '0%';
           serverVersion.textContent = 'N/A';
-          serverMotd.textContent = 'Server is currently offline or unreachable.';
+          serverMotd.textContent = 'Could not reach the server. Make sure the server is online and the IP address is correct.';
           serverIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="%238b95a7" stroke-width="2"><path d="M18.364 5.636a9 9 0 0 1 0 12.728M5.636 5.636a9 9 0 0 0 0 12.728M12 2v20"/></svg>';
         }
       } catch (error) {
         loader.style.display = 'none';
-        alert('Could not retrieve status. Please try again.');
+        alert('Failed to connect to status API. Please check your internet connection.');
       }
     }
   </script>
