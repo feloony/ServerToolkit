@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Status Checker | ServerToolkit by VoxelHosting</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .status-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #12161f;
+      border: 1px solid #1e2638;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .input-group input {
+      flex: 1;
+      padding: 12px 16px;
+      background: #090b0e;
+      border: 1px solid #232b3e;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+    .input-group input:focus {
+      border-color: #6366f1;
+    }
+    .btn-check {
+      padding: 12px 24px;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-check:hover {
+      background: #4f46e5;
+    }
+    .result-box {
+      display: none;
+      background: #090b0e;
+      border: 1px solid #1e2638;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .status-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #1e2638;
+    }
+    .server-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #12161f;
+      border: 1px solid #232b3e;
+      object-fit: contain;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .online {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .offline {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .info-box {
+      background: #12161f;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #1e2638;
+    }
+    .info-label {
+      font-size: 0.75rem;
+      color: #8b95a7;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .info-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .motd-box {
+      background: #12161f;
+      border: 1px solid #1e2638;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .loader {
+      display: none;
+      text-align: center;
+      color: #8b95a7;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="status-container">
+    <h1 style="font-size: 1.8rem; text-align: center; margin-bottom: 8px;">Server Status Checker</h1>
+    <p style="color: #8b95a7; text-align: center; font-size: 0.95rem;">Check real-time player counts, MOTD, and status instantly.</p>
+
+    <div class="input-group">
+      <input type="text" id="serverIp" placeholder="e.g. play.hypixel.net" />
+      <button class="btn-check" onclick="checkStatus()">Check</button>
+    </div>
+
+    <div class="loader" id="loader">Fetching server details...</div>
+
+    <div class="result-box" id="resultCard">
+      <div class="status-header">
+        <img id="serverIcon" class="server-icon" src="" alt="Icon" />
+        <div>
+          <div id="serverHost" style="font-weight: 700; font-size: 1.1rem;">-</div>
+          <span id="statusBadge" class="badge">-</span>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="info-label">Players</div>
+          <div class="info-value" id="playerCount">-</div>
+        </div>
+        <div class="info-box">
+          <div class="info-label">Version</div>
+          <div class="info-value" id="serverVersion">-</div>
+        </div>
+      </div>
+
+      <div class="motd-box" id="serverMotd">-</div>
+    </main>
+
+  <script>
+    async function checkStatus() {
+      const ip = document.getElementById('serverIp').value.trim();
+      const loader = document.getElementById('loader');
+      const resultCard = document.getElementById('resultCard');
+
+      if (!ip) return;
+
+      loader.style.display = 'block';
+      resultCard.style.display = 'none';
+
+      try {
+        const response = await fetch(`https://api.mcsrvstat.us/3/${ip}`);
+        const data = await response.json();
+
+        loader.style.display = 'none';
+        resultCard.style.display = 'block';
+
+        const statusBadge = document.getElementById('statusBadge');
+        const serverHost = document.getElementById('serverHost');
+        const playerCount = document.getElementById('playerCount');
+        const serverVersion = document.getElementById('serverVersion');
+        const serverMotd = document.getElementById('serverMotd');
+        const serverIcon = document.getElementById('serverIcon');
+
+        serverHost.textContent = data.hostname || data.ip;
+
+        if (data.online) {
+          statusBadge.textContent = 'Online';
+          statusBadge.className = 'badge online';
+          playerCount.textContent = `${data.players.online} / ${data.players.max}`;
+          serverVersion.textContent = data.version || 'Unknown';
+          
+          let motdText = 'No MOTD available.';
+          if (data.motd && data.motd.clean && data.motd.clean.length > 0) {
+            motdText = data.motd.clean.join('\n');
+          } else if (data.motd && data.motd.raw && data.motd.raw.length > 0) {
+            motdText = data.motd.raw.join('\n');
+          }
+          
+          serverMotd.textContent = motdText;
+          serverIcon.src = data.icon || `https://eu.mc-api.net/v3/server/favicon/${ip}`;
+        } else {
+          statusBadge.textContent = 'Offline';
+          statusBadge.className = 'badge offline';
+          playerCount.textContent = '0 / 0';
+          serverVersion.textContent = 'N/A';
+          serverMotd.textContent = 'Server is currently offline or unreachable.';
+          serverIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="%238b95a7" stroke-width="2"><path d="M18.364 5.636a9 9 0 0 1 0 12.728M5.636 5.636a9 9 0 0 0 0 12.728M12 2v20"/></svg>';
+        }
+      } catch (error) {
+        loader.style.display = 'none';
+        alert('Could not retrieve status. Please try again.');
+      }
+    }
+  </script>
+</body>
+</html>
