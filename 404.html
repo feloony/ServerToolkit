@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting... — MCTools</title>
+  <script>
+    (function() {
+      // Get the current path (e.g. "/server-properties.html")
+      var path = window.location.pathname;
 
+      // Check if the URL ends with .html
+      if (path.endsWith('.html')) {
+        // Strip the '.html' suffix
+        var cleanPath = path.slice(0, -5);
+
+        // Remove trailing 'index' if it was index.html
+        if (cleanPath.endsWith('/index')) {
+          cleanPath = cleanPath.slice(0, -6);
+        }
+
+        // Add trailing slash for folder structure
+        cleanPath += '/';
+
+        // Perform instant redirect preserving query params or hashes
+        var targetUrl = window.location.origin + cleanPath + window.location.search + window.location.hash;
+        window.location.replace(targetUrl);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+    Redirecting to the clean page...
+  </p>
+</body>
+</html>
