@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# 1. Redirect actual .html files to the clean URL version (Prevents duplicate content)
+RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
+RewriteRule ^ /%1 [NC,L,R=301]
+
+# 2. Internally map the clean URL back to the .html file
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^ %{REQUEST_URI}.html [NC,L]
