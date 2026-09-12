@@ -3,17 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO Meta Tags -->
   <title>Server Status Checker — MCTools</title>
-  <meta name="description" content="Check real-time status, MOTD, version, and live player count of any Minecraft server.">
+  <meta name="title" content="Server Status Checker — MCTools">
+  <meta name="description" content="Check real-time status, live player count, colored MOTD, server icon, and version of any Minecraft Java or Bedrock server.">
+  <meta name="keywords" content="minecraft server ping, minecraft status checker, check minecraft server ip, motd preview, mctools">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="author" content="OpenUtility">
+
+  <!-- Canonical Link -->
+  <link rel="canonical" href="https://mctools.wiki.gd/server-status">
+
+  <!-- Open Graph / Discord Previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mctools.wiki.gd/server-status">
+  <meta property="og:title" content="Server Status Checker — MCTools">
+  <meta property="og:description" content="Check real-time status, live player count, colored MOTD, server icon, and version of any Minecraft server.">
+  <meta property="og:image" content="https://mctools.wiki.gd/assets/images/logo.png">
+
+  <!-- Preconnect & Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- Root-Absolute CSS Path -->
+  <!-- Root-Absolute CSS Paths -->
   <link rel="stylesheet" href="/assets/css/style.css">
+
   <style>
-    /* Minecraft Dark-Purple & Dark-Blue Theme */
+    /* Minecraft Dark-Purple & Dark-Blue Theme Override */
     :root {
       --mc-purple-bg: #12081f;
       --mc-purple-dark: #1b0e2d;
@@ -63,7 +83,7 @@
     }
 
     .checker-wrapper {
-      max-width: 800px;
+      max-width: 850px;
       margin: 0 auto;
       padding: 0 16px;
     }
@@ -130,14 +150,17 @@
 
     .btn {
       font-family: 'Press Start 2P', monospace;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       border-radius: 0;
       border: 3px solid #000;
       box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.4), inset 3px 3px 0px rgba(255, 255, 255, 0.3);
-      padding: 12px 18px;
+      padding: 12px 16px;
       transition: all 0.1s ease;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-primary {
@@ -150,6 +173,20 @@
       color: #fff;
     }
 
+    .btn-secondary {
+      background-color: var(--mc-purple-dark);
+      color: var(--mc-subtext);
+      border: 2px solid var(--mc-border);
+      font-size: 0.6rem;
+      padding: 6px 10px;
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--mc-blue-accent);
+      color: #fff;
+    }
+
     .presets {
       display: flex;
       align-items: center;
@@ -159,7 +196,7 @@
     }
 
     .preset-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--mc-subtext);
       font-weight: 600;
       text-transform: uppercase;
@@ -172,7 +209,7 @@
       border-radius: 0;
       color: var(--mc-white);
       padding: 6px 12px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -201,15 +238,23 @@
     .status-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 16px;
       margin-bottom: 20px;
       padding-bottom: 20px;
       border-bottom: 2px solid var(--mc-border);
+      flex-wrap: wrap;
+    }
+
+    .status-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
     .server-icon {
-      width: 56px;
-      height: 56px;
+      width: 64px;
+      height: 64px;
       border-radius: 0;
       background: #000;
       border: 2px solid var(--mc-border);
@@ -241,7 +286,7 @@
 
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 12px;
       margin-bottom: 20px;
     }
@@ -265,6 +310,7 @@
       font-size: 1rem;
       font-weight: 600;
       color: #f1f5f9;
+      word-break: break-all;
     }
 
     .progress-bar-container {
@@ -279,7 +325,7 @@
 
     .progress-bar {
       height: 100%;
-      background: var(--mc-blue-accent);
+      background: #10b981;
       width: 0%;
       transition: width 0.4s ease;
     }
@@ -302,22 +348,24 @@
       border-radius: 0;
       padding: 16px;
       font-family: 'VT323', monospace;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       color: #ffffff;
       white-space: pre-wrap;
       word-break: break-word;
       line-height: 1.4;
       text-shadow: 2px 2px 0px #000000;
+      min-height: 60px;
     }
 
     .loader {
       display: none;
       text-align: center;
       color: var(--mc-subtext);
-      padding: 20px 0;
+      padding: 24px 0;
       font-weight: 500;
       font-family: 'Press Start 2P', monospace;
       font-size: 0.75rem;
+      line-height: 1.8;
     }
 
     /* MCTools Footer Styling */
@@ -466,13 +514,16 @@
       .checker-card {
         padding: 20px;
       }
+      .status-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <!-- Root-Absolute Logo Image and Home Link -->
       <a href="/" class="logo">
         <img src="/assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools
       </a>
@@ -481,7 +532,7 @@
           <li><a href="/">Home</a></li>
           <li><a href="/#tools" class="active">Tools</a></li>
           <li><a href="/#about">About</a></li>
-          <li><a href="https://github.com/OpenUtility2/MCTools" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
+          <li><a href="https://discord.gg/ufvQ4Ghtpu" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-discord"></i> Discord</a></li>
         </ul>
         <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
           <span></span>
@@ -494,7 +545,7 @@
       <a href="/"><i class="fas fa-home"></i> Home</a>
       <a href="/#tools"><i class="fas fa-tools"></i> Tools</a>
       <a href="/#about"><i class="fas fa-info-circle"></i> About</a>
-      <a href="https://github.com/OpenUtility2/MCTools" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+      <a href="https://discord.gg/ufvQ4Ghtpu" target="_blank" rel="noopener"><i class="fab fa-discord"></i> Discord</a>
     </div>
   </header>
 
@@ -509,9 +560,9 @@
         </div>
 
         <div class="checker-card">
-          <label for="serverIp" style="font-weight: 600; color: #f1f5f9; font-size: 0.9rem; font-family: 'Press Start 2P', monospace;">Enter Server IP Address</label>
+          <label for="serverIp" style="font-weight: 600; color: #f1f5f9; font-size: 0.8rem; font-family: 'Press Start 2P', monospace;">Enter Server IP Address</label>
           <div class="input-group">
-            <input type="text" id="serverIp" placeholder="e.g. play.hypixel.net or jartex.fun" onkeydown="if(event.key==='Enter') checkStatus()" />
+            <input type="text" id="serverIp" placeholder="e.g. play.hypixel.net or top.jartex.fun" onkeydown="if(event.key==='Enter') checkStatus()" />
             <button class="btn btn-primary" onclick="checkStatus()"><i class="fas fa-search"></i> Check</button>
           </div>
 
@@ -527,10 +578,17 @@
 
           <div class="result-box" id="resultCard">
             <div class="status-header">
-              <img id="serverIcon" class="server-icon" src="" alt="Server Icon" />
-              <div>
-                <div id="serverHost" style="font-family: 'Press Start 2P', monospace; font-size: 0.9rem; color: #fff;">-</div>
-                <span id="statusBadge" class="badge">-</span>
+              <div class="status-header-left">
+                <img id="serverIcon" class="server-icon" src="" alt="Server Icon" />
+                <div>
+                  <div id="serverHost" style="font-family: 'Press Start 2P', monospace; font-size: 0.85rem; color: #fff;">-</div>
+                  <span id="statusBadge" class="badge">-</span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary" onclick="copyIp()"><i class="fas fa-copy"></i> Copy IP</button>
+                <button class="btn btn-secondary" onclick="checkStatus()"><i class="fas fa-sync"></i> Refresh</button>
               </div>
             </div>
 
@@ -569,7 +627,7 @@
       </h2>
       
       <div class="footer-socials">
-        <a href="https://discord.com" target="_blank" rel="noopener" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://discord.gg/ufvQ4Ghtpu" target="_blank" rel="noopener" aria-label="Discord"><i class="fab fa-discord"></i></a>
         <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
         <a href="https://reddit.com" target="_blank" rel="noopener" aria-label="Reddit"><i class="fab fa-reddit-alien"></i></a>
         <a href="https://ko-fi.com" target="_blank" rel="noopener" aria-label="Ko-fi"><i class="fas fa-mug-hot"></i></a>
@@ -588,8 +646,8 @@
         <a href="/#about">About</a>
         <span class="dot">&bull;</span>
         <div class="openutility-ad-box">
-          <span class="ad-label">ads powered by</span>
-          <a href="https://openutility.org" class="openutility-badge" target="_blank" rel="noopener">
+          <span class="ad-label">powered by</span>
+          <a href="https://discord.gg/ufvQ4Ghtpu" class="openutility-badge" target="_blank" rel="noopener">
             <span class="openutility-icon">o</span> OpenUtility&reg;
           </a>
         </div>
@@ -604,13 +662,23 @@
   <!-- Root-Absolute JavaScript Path -->
   <script src="/assets/js/main.js"></script>
   <script>
+    const DEFAULT_ICON = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 16 16"><rect width="16" height="16" fill="%232b1d0c"/><rect x="0" y="0" width="16" height="4" fill="%235c8e32"/><rect x="0" y="4" width="16" height="2" fill="%233e6820"/></svg>';
+
     function quickCheck(ip) {
       document.getElementById('serverIp').value = ip;
       checkStatus();
     }
 
+    function copyIp() {
+      const ip = document.getElementById('serverIp').value.trim();
+      if (!ip) return;
+      navigator.clipboard.writeText(ip).then(() => {
+        alert(`Copied IP: ${ip} to clipboard!`);
+      });
+    }
+
     function renderMotdHtml(motdData) {
-      if (!motdData) return 'No MOTD provided.';
+      if (!motdData) return '<span style="color: #a0a0a0;">No MOTD available</span>';
       
       if (motdData.html && motdData.html.length > 0) {
         return motdData.html.join('<br>');
@@ -620,65 +688,101 @@
         return motdData.clean.join('<br>');
       }
 
-      return 'No MOTD provided.';
+      if (typeof motdData === 'string') {
+        return motdData;
+      }
+
+      return '<span style="color: #a0a0a0;">No MOTD available</span>';
     }
 
     async function checkStatus() {
-      const ip = document.getElementById('serverIp').value.trim();
+      const ipInput = document.getElementById('serverIp').value.trim();
       const loader = document.getElementById('loader');
       const resultCard = document.getElementById('resultCard');
 
-      if (!ip) return;
+      if (!ipInput) return;
 
       loader.style.display = 'block';
       resultCard.style.display = 'none';
 
+      const statusBadge = document.getElementById('statusBadge');
+      const serverHost = document.getElementById('serverHost');
+      const playerCount = document.getElementById('playerCount');
+      const playerBar = document.getElementById('playerBar');
+      const serverVersion = document.getElementById('serverVersion');
+      const serverIpDisplay = document.getElementById('serverIpDisplay');
+      const serverMotd = document.getElementById('serverMotd');
+      const serverIcon = document.getElementById('serverIcon');
+
+      let data = null;
+
+      // Primary API Request (api.mcsrvstat.us)
       try {
-        const response = await fetch(`https://api.mcsrvstat.us/3/${ip}`);
-        const data = await response.json();
-
-        loader.style.display = 'none';
-        resultCard.style.display = 'block';
-
-        const statusBadge = document.getElementById('statusBadge');
-        const serverHost = document.getElementById('serverHost');
-        const playerCount = document.getElementById('playerCount');
-        const playerBar = document.getElementById('playerBar');
-        const serverVersion = document.getElementById('serverVersion');
-        const serverIpDisplay = document.getElementById('serverIpDisplay');
-        const serverMotd = document.getElementById('serverMotd');
-        const serverIcon = document.getElementById('serverIcon');
-
-        serverHost.textContent = data.hostname || data.ip;
-        serverIpDisplay.textContent = `${data.ip}:${data.port || 25565}`;
-
-        if (data.online) {
-          statusBadge.textContent = 'Online';
-          statusBadge.className = 'badge online';
-          
-          const onlinePlayers = data.players ? data.players.online : 0;
-          const maxPlayers = data.players ? data.players.max : 0;
-          playerCount.textContent = `${onlinePlayers.toLocaleString()} / ${maxPlayers.toLocaleString()}`;
-          
-          const percent = maxPlayers > 0 ? (onlinePlayers / maxPlayers) * 100 : 0;
-          playerBar.style.width = `${Math.min(percent, 100)}%`;
-
-          serverVersion.textContent = data.version || 'Java Server';
-          
-          serverMotd.innerHTML = renderMotdHtml(data.motd);
-          serverIcon.src = data.icon || `https://eu.mc-api.net/v3/server/favicon/${ip}`;
-        } else {
-          statusBadge.textContent = 'Offline / Unreachable';
-          statusBadge.className = 'badge offline';
-          playerCount.textContent = '0 / 0';
-          playerBar.style.width = '0%';
-          serverVersion.textContent = 'N/A';
-          serverMotd.innerHTML = '<span style="color: #ef4444;">Could not reach the server. Make sure the server is online and the IP address is correct.</span>';
-          serverIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="%238b95a7" stroke-width="2"><path d="M18.364 5.636a9 9 0 0 1 0 12.728M5.636 5.636a9 9 0 0 0 0 12.728M12 2v20"/></svg>';
+        const response = await fetch(`https://api.mcsrvstat.us/3/${ipInput}`);
+        if (response.ok) {
+          data = await response.json();
         }
-      } catch (error) {
-        loader.style.display = 'none';
-        alert('An error occurred while checking the server status.');
+      } catch (e) {
+        console.warn('Primary API failed, trying fallback API...');
+      }
+
+      // Secondary Fallback API Request (api.mcstatus.io)
+      if (!data || !data.online) {
+        try {
+          const fallbackRes = await fetch(`https://api.mcstatus.io/v2/status/java/${ipInput}`);
+          if (fallbackRes.ok) {
+            const fbData = await fallbackRes.json();
+            if (fbData.online) {
+              data = {
+                online: true,
+                hostname: fbData.host,
+                ip: fbData.ip_address,
+                port: fbData.port,
+                players: {
+                  online: fbData.players.online,
+                  max: fbData.players.max
+                },
+                version: fbData.version.name_clean,
+                motd: { html: [fbData.motd.html] },
+                icon: fbData.icon
+              };
+            }
+          }
+        } catch (e) {
+          console.warn('Fallback API failed.');
+        }
+      }
+
+      loader.style.display = 'none';
+      resultCard.style.display = 'block';
+
+      if (data && data.online) {
+        serverHost.textContent = data.hostname || data.ip || ipInput;
+        serverIpDisplay.textContent = `${data.ip || ipInput}:${data.port || 25565}`;
+
+        statusBadge.textContent = 'Online';
+        statusBadge.className = 'badge online';
+
+        const onlinePlayers = data.players ? (data.players.online || 0) : 0;
+        const maxPlayers = data.players ? (data.players.max || 0) : 0;
+        playerCount.textContent = `${onlinePlayers.toLocaleString()} / ${maxPlayers.toLocaleString()}`;
+
+        const percent = maxPlayers > 0 ? (onlinePlayers / maxPlayers) * 100 : 0;
+        playerBar.style.width = `${Math.min(percent, 100)}%`;
+
+        serverVersion.textContent = data.version || 'Java Edition';
+        serverMotd.innerHTML = renderMotdHtml(data.motd);
+        serverIcon.src = data.icon || DEFAULT_ICON;
+      } else {
+        serverHost.textContent = ipInput;
+        serverIpDisplay.textContent = `${ipInput}:25565`;
+        statusBadge.textContent = 'Offline / Unreachable';
+        statusBadge.className = 'badge offline';
+        playerCount.textContent = '0 / 0';
+        playerBar.style.width = '0%';
+        serverVersion.textContent = 'N/A';
+        serverMotd.innerHTML = '<span style="color: #ef4444;">Could not connect to server. Check if the IP is correct and the server is running.</span>';
+        serverIcon.src = DEFAULT_ICON;
       }
     }
   </script>
