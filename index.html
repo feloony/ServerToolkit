@@ -49,6 +49,16 @@
       color: var(--mc-subtext) !important;
       text-transform: uppercase;
       font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .site-logo {
+      height: 32px;
+      width: auto;
+      vertical-align: middle;
     }
 
     .btn {
@@ -60,6 +70,7 @@
       box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.4), inset 3px 3px 0px rgba(255, 255, 255, 0.3);
       padding: 12px 18px;
       transition: all 0.1s ease;
+      cursor: pointer;
     }
 
     .btn-primary {
@@ -70,15 +81,6 @@
     .btn-primary:hover {
       background-color: #3b4e8c;
       color: #fff;
-    }
-
-    .btn-secondary {
-      background-color: #432e5c;
-      color: #fff;
-    }
-
-    .btn-secondary:hover {
-      background-color: #593e7a;
     }
 
     .card, .feature-card, .about-section {
@@ -121,6 +123,9 @@
       color: #b39ddb;
       margin: 0;
       letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .footer-socials {
@@ -143,6 +148,7 @@
       font-size: 1.2rem;
       text-decoration: none;
       transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
     }
 
     .footer-socials a:hover {
@@ -163,6 +169,7 @@
     .footer-nav-inline a {
       color: #ffffff;
       text-decoration: none;
+      cursor: pointer;
     }
 
     .footer-nav-inline a:hover {
@@ -173,7 +180,7 @@
       color: #7e689b;
     }
 
-    .playwire-ad-box {
+    .openutility-ad-box {
       border: 1px solid #7e689b;
       border-radius: 8px;
       padding: 6px 14px;
@@ -186,7 +193,7 @@
       background: rgba(0, 0, 0, 0.2);
     }
 
-    .playwire-ad-box .ad-label {
+    .openutility-ad-box .ad-label {
       position: absolute;
       top: -9px;
       left: 50%;
@@ -198,7 +205,7 @@
       white-space: nowrap;
     }
 
-    .playwire-badge {
+    .openutility-badge {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -206,10 +213,11 @@
       font-family: sans-serif;
       font-weight: bold;
       font-size: 0.9rem;
+      text-decoration: none;
     }
 
-    .playwire-icon {
-      background: #0072ce;
+    .openutility-icon {
+      background: #2b3a67; /* Theme dark-blue instead of playwire blue */
       color: #fff;
       border-radius: 50%;
       width: 20px;
@@ -234,13 +242,11 @@
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="logo">
-        <span class="logo-icon"><i class="fas fa-cube"></i></span>
-        MC Tools
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools
       </a>
       <nav>
         <ul class="nav-links">
-          <li><a href="index.html" class="logo">
-  <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools </a></li>
+          <li><a href="index.html" class="active">Home</a></li>
           <li><a href="#tools">Tools</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
@@ -267,11 +273,11 @@
         <p>MC Tools provides free utilities for Minecraft server owners and developers. No account required. Everything runs in your browser.</p>
         <div class="hero-actions">
           <a href="#tools" class="btn btn-primary"><i class="fas fa-wrench"></i> Explore Tools</a>
-          <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-secondary"><i class="fab fa-github"></i> Open Source</a>
         </div>
       </div>
     </section>
 
+    <!-- Rest of your main sections (tools, features, etc) stay unchanged -->
     <section id="tools" class="section">
       <div class="container">
         <div class="section-header">
@@ -374,14 +380,18 @@
 
   <footer class="site-footer">
     <div class="footer-container">
-      <h2 class="footer-title">MCTools</h2>
+      <!-- Title featuring brand text and logo image -->
+      <h2 class="footer-title">
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MCTools
+      </h2>
       
+      <!-- Clickable social icons (linked to external placeholder URLs) -->
       <div class="footer-socials">
-        <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
-        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="#" aria-label="Reddit"><i class="fab fa-reddit-alien"></i></a>
-        <a href="#" aria-label="Ko-fi"><i class="fas fa-mug-hot"></i></a>
-        <a href="#" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        <a href="https://discord.com" target="_blank" rel="noopener" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://reddit.com" target="_blank" rel="noopener" aria-label="Reddit"><i class="fab fa-reddit-alien"></i></a>
+        <a href="https://ko-fi.com" target="_blank" rel="noopener" aria-label="Ko-fi"><i class="fas fa-mug-hot"></i></a>
+        <a href="mailto:contact@openutility.org" aria-label="Email"><i class="fas fa-envelope"></i></a>
       </div>
 
       <div class="footer-nav-inline">
@@ -395,11 +405,11 @@
       <div class="footer-nav-inline">
         <a href="#about">About</a>
         <span class="dot">&bull;</span>
-        <div class="playwire-ad-box">
+        <div class="openutility-ad-box">
           <span class="ad-label">ads powered by</span>
-          <div class="playwire-badge">
-            <span class="playwire-icon">p</span> playwire&reg;
-          </div>
+          <a href="https://openutility.org" class="openutility-badge" target="_blank" rel="noopener">
+            <span class="openutility-icon">o</span> OpenUtility&reg;
+          </a>
         </div>
       </div>
 
