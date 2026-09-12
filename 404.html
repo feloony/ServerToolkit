@@ -2,35 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting... — MCTools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found — MCTools</title>
+  
   <script>
     (function() {
-      // Get the current path (e.g. "/server-properties.html")
       var path = window.location.pathname;
 
-      // Check if the URL ends with .html
+      // Check if URL ends with .html
       if (path.endsWith('.html')) {
-        // Strip the '.html' suffix
         var cleanPath = path.slice(0, -5);
 
-        // Remove trailing 'index' if it was index.html
+        // Remove trailing 'index' if present (e.g. /index.html -> /)
         if (cleanPath.endsWith('/index')) {
           cleanPath = cleanPath.slice(0, -6);
         }
 
-        // Add trailing slash for folder structure
+        // Add trailing slash for clean folder routing
         cleanPath += '/';
 
-        // Perform instant redirect preserving query params or hashes
+        // Perform fast client-side redirect
         var targetUrl = window.location.origin + cleanPath + window.location.search + window.location.hash;
         window.location.replace(targetUrl);
       }
     })();
   </script>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --mc-purple-bg: #12081f;
+      --mc-purple-dark: #1b0e2d;
+      --mc-panel-bg: #1a102a;
+      --mc-blue-accent: #2b3a67;
+      --mc-border: #3d2856;
+      --mc-subtext: #b8a8d0;
+    }
+
+    body {
+      background-color: var(--mc-purple-bg);
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(#25143a 15%, transparent 16%), radial-gradient(#1d0e30 15%, transparent 16%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .error-card {
+      background-color: var(--mc-panel-bg);
+      border: 3px solid #000;
+      outline: 2px solid var(--mc-border);
+      box-shadow: 6px 6px 0px #000000;
+      padding: 40px 30px;
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 2.5rem;
+      color: #b39ddb;
+      margin: 0 0 15px 0;
+    }
+
+    p {
+      color: var(--mc-subtext);
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.4), inset 3px 3px 0px rgba(255, 255, 255, 0.3);
+      padding: 12px 20px;
+      background-color: var(--mc-blue-accent);
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.1s ease;
+    }
+
+    .btn:hover {
+      background-color: #3b4e8c;
+    }
+  </style>
 </head>
 <body>
-  <p style="font-family: sans-serif; text-align: center; margin-top: 50px;">
-    Redirecting to the clean page...
-  </p>
+  <div class="error-card">
+    <h1>404</h1>
+    <p>The chunk you are looking for hasn't been generated yet or was moved.</p>
+    <a href="/" class="btn"><i class="fas fa-home"></i> Back to Home</a>
+  </div>
 </body>
 </html>
