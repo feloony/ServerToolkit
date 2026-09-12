@@ -3,17 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOTD Generator — ServerToolkit</title>
+  <title>MOTD Generator — MCTools</title>
   <meta name="description" content="Create and preview Minecraft server MOTDs with colors and formatting.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
+    /* Minecraft Dark-Purple & Dark-Blue Theme */
+    :root {
+      --mc-purple-bg: #12081f;
+      --mc-purple-dark: #1b0e2d;
+      --mc-panel-bg: #1a102a;
+      --mc-blue-accent: #2b3a67;
+      --mc-blue-dark: #1a2035;
+      --mc-white: #ffffff;
+      --mc-border: #3d2856;
+      --mc-text: #ffffff;
+      --mc-subtext: #b8a8d0;
+    }
+
+    body {
+      background-color: var(--mc-purple-bg);
+      color: var(--mc-text);
+      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(#25143a 15%, transparent 16%), radial-gradient(#1d0e30 15%, transparent 16%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
+    h1, h2, h3, h4, .logo, .tool-page-header h1 {
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: -0.5px;
+    }
+
+    .site-header {
+      background: var(--mc-purple-dark);
+      border-bottom: 4px solid var(--mc-blue-accent);
+      box-shadow: 0 4px 0 #000000;
+    }
+
+    .logo {
+      color: var(--mc-subtext) !important;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .site-logo {
+      height: 32px;
+      width: auto;
+      vertical-align: middle;
+    }
+
+    .btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      border-radius: 0;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.4), inset 3px 3px 0px rgba(255, 255, 255, 0.3);
+      padding: 12px 18px;
+      transition: all 0.1s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--mc-blue-accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #3b4e8c;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background-color: #432e5c;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #593e7a;
+    }
+
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 0.65rem;
+    }
+
     .tool-page-header {
       padding: 2.5rem 0 1.5rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px solid var(--mc-border);
       margin-bottom: 2rem;
     }
 
@@ -22,52 +107,54 @@
       align-items: center;
       gap: 0.5rem;
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: var(--mc-subtext);
       margin-bottom: 0.75rem;
     }
 
     .breadcrumb a {
-      color: var(--text-secondary);
+      color: var(--mc-text);
       text-decoration: none;
     }
 
     .breadcrumb a:hover {
-      color: var(--text);
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     .tool-page-header h1 {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      margin-top: 0.5rem;
     }
 
     .tool-page-header p {
-      color: var(--text-secondary);
-      margin-top: 0.5rem;
+      color: var(--mc-subtext);
+      margin-top: 0.75rem;
       max-width: 700px;
+      line-height: 1.6;
     }
 
     .tool-layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
     }
 
     .tool-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      background-color: var(--mc-panel-bg);
+      border: 3px solid #000;
+      outline: 2px solid var(--mc-border);
+      box-shadow: 6px 6px 0px #000000;
+      border-radius: 0;
       padding: 1.5rem;
     }
 
     .tool-panel-title {
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.85rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
+      color: var(--mc-white);
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -79,29 +166,31 @@
 
     .form-group label {
       display: block;
+      font-weight: 600;
       font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.375rem;
-      color: var(--text);
+      margin-bottom: 0.5rem;
+      color: var(--mc-text);
     }
 
     .form-textarea {
       width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 0.625rem 0.875rem;
-      color: var(--text);
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
+      padding: 0.75rem;
+      color: var(--mc-white);
       font-size: 0.9rem;
       transition: border-color 0.2s ease;
       resize: vertical;
       min-height: 100px;
-      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-family: 'VT323', monospace;
+      letter-spacing: 0.5px;
+      box-sizing: border-box;
     }
 
     .form-textarea:focus {
       outline: none;
-      border-color: var(--accent);
+      border-color: var(--mc-blue-accent);
     }
 
     .color-palette {
@@ -113,22 +202,22 @@
     .color-swatch {
       width: 32px;
       height: 32px;
-      border-radius: var(--radius-sm);
-      border: 2px solid var(--border);
+      border-radius: 0;
+      border: 2px solid #000;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: transform 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.75rem;
       font-weight: 700;
-      color: rgba(255,255,255,0.8);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      box-shadow: 2px 2px 0px #000;
     }
 
     .color-swatch:hover {
       transform: scale(1.1);
-      border-color: var(--accent);
     }
 
     .format-chips {
@@ -139,9 +228,9 @@
 
     .format-chip {
       padding: 0.4rem 0.8rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
       font-size: 0.85rem;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -149,24 +238,24 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      color: var(--mc-white);
     }
 
     .format-chip:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--surface-hover);
+      border-color: var(--mc-blue-accent);
+      background: var(--mc-blue-dark);
     }
 
     .code-output {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
       padding: 1rem;
-      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-      font-size: 0.8rem;
-      line-height: 1.7;
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      line-height: 1.5;
       word-break: break-all;
-      color: var(--text);
+      color: var(--mc-white);
       white-space: pre-wrap;
       min-height: 40px;
     }
@@ -179,39 +268,36 @@
     }
 
     .server-list-preview {
-      background: #c6c6c6;
-      border-radius: 4px;
+      background: #25143a;
+      border: 3px solid #000;
+      border-radius: 0;
       overflow: hidden;
       max-width: 480px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      box-shadow: 4px 4px 0px #000;
     }
 
     .server-list-header {
-      background: linear-gradient(to bottom, #787878, #585858);
-      padding: 0.5rem 1rem;
+      background: var(--mc-purple-dark);
+      padding: 0.6rem 1rem;
       color: #fff;
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.65rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      border-bottom: 2px solid #000;
     }
 
     .server-list-item {
-      background: #c6c6c6;
-      padding: 0.5rem 1rem;
-      border-top: 2px solid #fff;
-      border-bottom: 2px solid #555;
+      background: #11071c;
+      padding: 0.75rem 1rem;
     }
 
     .server-list-item-inner {
-      background: #dedede;
-      border: 2px solid #fff;
-      border-bottom-color: #888;
-      border-right-color: #888;
-      padding: 0.5rem;
+      background: #1b0e2d;
+      border: 2px solid var(--mc-border);
+      padding: 0.75rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -219,22 +305,162 @@
     }
 
     .server-list-motd {
-      color: #000;
-      font-size: 0.875rem;
+      color: #fff;
+      font-size: 1.1rem;
       line-height: 1.4;
-      font-family: 'Courier New', monospace;
+      font-family: 'VT323', monospace;
     }
 
     .server-list-players {
       text-align: right;
-      color: #000;
-      font-size: 0.75rem;
+      color: var(--mc-subtext);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
       flex-shrink: 0;
     }
 
     .server-list-players strong {
-      font-size: 1rem;
+      font-size: 0.8rem;
       display: block;
+      color: var(--mc-white);
+    }
+
+    /* Custom MCTools Footer Layout */
+    .site-footer {
+      background-color: #160e2a;
+      border-top: 1px solid #2d1d47;
+      color: #bfaedc;
+      padding: 3rem 1rem 2rem 1rem;
+      text-align: center;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .footer-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-title {
+      font-size: 2rem;
+      color: #b39ddb;
+      margin: 0;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-socials {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    .footer-socials a {
+      color: #ffffff;
+      background: #1a2035;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .footer-socials a:hover {
+      background: var(--mc-blue-accent);
+      transform: translateY(-2px);
+    }
+
+    .footer-nav-inline {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      color: #e0e0e0;
+    }
+
+    .footer-nav-inline a {
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .footer-nav-inline a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-nav-inline .dot {
+      color: #7e689b;
+    }
+
+    .openutility-ad-box {
+      border: 1px solid #7e689b;
+      border-radius: 8px;
+      padding: 6px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.65rem;
+      position: relative;
+      margin-top: 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .openutility-ad-box .ad-label {
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #160e2a;
+      padding: 0 6px;
+      color: #bfaedc;
+      font-size: 0.55rem;
+      white-space: nowrap;
+    }
+
+    .openutility-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ffffff;
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .openutility-icon {
+      background: #2b3a67;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    .footer-disclaimer {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
+      color: #8c7aa8;
+      line-height: 1.8;
+      max-width: 650px;
+      margin-top: 1rem;
     }
 
     @media (max-width: 768px) {
@@ -248,14 +474,13 @@
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="logo">
-        <span class="logo-icon"><i class="fas fa-server"></i></span>
-        ServerToolkit
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools
       </a>
       <nav>
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
-          <li><a href="#tools" class="active">Tools</a></li>
-          <li><a href="#about">About</a></li>
+          <li><a href="index.html#tools" class="active">Tools</a></li>
+          <li><a href="index.html#about">About</a></li>
           <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
         </ul>
         <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -267,8 +492,8 @@
     </div>
     <div class="mobile-nav-menu">
       <a href="index.html"><i class="fas fa-home"></i> Home</a>
-      <a href="#tools"><i class="fas fa-tools"></i> Tools</a>
-      <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+      <a href="index.html#tools"><i class="fas fa-tools"></i> Tools</a>
+      <a href="index.html#about"><i class="fas fa-info-circle"></i> About</a>
       <a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
     </div>
   </header>
@@ -338,37 +563,41 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="index.html" class="logo">
-            <span class="logo-icon"><i class="fas fa-server"></i></span>
-            ServerToolkit
+    <div class="footer-container">
+      <h2 class="footer-title">
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MCTools
+      </h2>
+      
+      <div class="footer-socials">
+        <a href="https://discord.com" target="_blank" rel="noopener" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://reddit.com" target="_blank" rel="noopener" aria-label="Reddit"><i class="fab fa-reddit-alien"></i></a>
+        <a href="https://ko-fi.com" target="_blank" rel="noopener" aria-label="Ko-fi"><i class="fas fa-mug-hot"></i></a>
+        <a href="mailto:contact@openutility.org" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+
+      <div class="footer-nav-inline">
+        <span>&copy; 2026 MCTools</span>
+        <span class="dot">&bull;</span>
+        <a href="#">Privacy</a>
+        <span class="dot">&bull;</span>
+        <a href="#">Terms</a>
+      </div>
+
+      <div class="footer-nav-inline">
+        <a href="index.html#about">About</a>
+        <span class="dot">&bull;</span>
+        <div class="openutility-ad-box">
+          <span class="ad-label">ads powered by</span>
+          <a href="https://openutility.org" class="openutility-badge" target="_blank" rel="noopener">
+            <span class="openutility-icon">o</span> OpenUtility&reg;
           </a>
-          <p>Free, open-source tools for Minecraft server owners and developers.</p>
-        </div>
-        <div class="footer-links">
-          <h4>Tools</h4>
-          <ul>
-            <li><a href="server-properties.html"><i class="fas fa-sliders-h"></i> Server Properties Editor</a></li>
-            <li><a href="motd.html"><i class="fas fa-palette"></i> MOTD Generator</a></li>
-            <li><a href="java-arguments.html"><i class="fas fa-microchip"></i> Java Arguments</a></li>
-            <li><a href="server-info.html"><i class="fas fa-signal"></i> Server Info</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Project</h4>
-          <ul>
-            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a></li>
-            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fas fa-file-contract"></i> License</a></li>
-            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
-          </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>ServerToolkit v0.1.0</p>
-        <p>&copy; <span class="footer-year">2026</span> ServerToolkit. Open source under MIT License.</p>
-      </div>
+
+      <p class="footer-disclaimer">
+        Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.
+      </p>
     </div>
   </footer>
 
