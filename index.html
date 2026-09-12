@@ -11,35 +11,35 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    /* Minecraft Theme Overrides */
+    /* Minecraft Dark-Purple Theme Overrides */
     :root {
-      --mc-dirt-dark: #1e1915;
-      --mc-stone-dark: #2c2d2d;
-      --mc-panel-bg: #212121;
+      --mc-purple-bg: #12081f;
+      --mc-purple-dark: #1b0e2d;
+      --mc-panel-bg: #1a102a;
       --mc-grass-green: #55ff55;
       --mc-emerald: #00aa00;
       --mc-white: #ffffff;
-      --mc-border: #3c3c3c;
+      --mc-border: #3d2856;
       --mc-text: #ffffff;
-      --mc-subtext: #aaaaaa;
+      --mc-subtext: #b8a8d0;
     }
 
     body {
-      background-color: var(--mc-dirt-dark);
+      background-color: var(--mc-purple-bg);
       color: var(--mc-text);
       font-family: 'Inter', sans-serif;
-      background-image: radial-gradient(#2a221c 15%, transparent 16%), radial-gradient(#251e18 15%, transparent 16%);
+      background-image: radial-gradient(#25143a 15%, transparent 16%), radial-gradient(#1d0e30 15%, transparent 16%);
       background-size: 30px 30px;
       background-position: 0 0, 15px 15px;
     }
 
-    h1, h2, h3, .logo {
+    h1, h2, h3, h4, .logo {
       font-family: 'Press Start 2P', monospace;
       letter-spacing: -0.5px;
     }
 
     .site-header {
-      background: #111111;
+      background: var(--mc-purple-dark);
       border-bottom: 4px solid var(--mc-emerald);
       box-shadow: 0 4px 0 #000000;
     }
@@ -72,18 +72,18 @@
     }
 
     .btn-secondary {
-      background-color: #555555;
+      background-color: #432e5c;
       color: #fff;
     }
 
     .btn-secondary:hover {
-      background-color: #777777;
+      background-color: #593e7a;
     }
 
     .card, .feature-card, .about-section {
       background-color: var(--mc-panel-bg);
       border: 3px solid #000;
-      outline: 2px solid #3c3c3c;
+      outline: 2px solid var(--mc-border);
       box-shadow: 6px 6px 0px #000000;
       border-radius: 0;
     }
@@ -96,9 +96,39 @@
       color: var(--mc-grass-green);
     }
 
+    /* Pixelated Purple Theme Footer */
     .site-footer {
-      background-color: #0d0d0d;
-      border-top: 4px solid var(--mc-border);
+      background-color: var(--mc-purple-dark);
+      border-top: 4px solid var(--mc-emerald);
+      box-shadow: inset 0 4px 0 rgba(255, 255, 255, 0.05);
+      color: var(--mc-subtext);
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+      margin-top: 4rem;
+    }
+
+    .site-footer h4 {
+      color: var(--mc-white);
+      font-size: 0.85rem;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    .site-footer a {
+      color: var(--mc-subtext);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .site-footer a:hover {
+      color: var(--mc-grass-green);
+    }
+
+    .footer-bottom {
+      border-top: 2px solid var(--mc-border);
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      color: var(--mc-subtext);
     }
 
     .site-logo {
