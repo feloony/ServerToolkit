@@ -9,7 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- Root-Absolute CSS Path -->
+  <link rel="stylesheet" href="/assets/css/style.css">
   <style>
     /* Minecraft Dark-Purple & Dark-Blue Theme */
     :root {
@@ -470,15 +472,16 @@
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a href="index.html" class="logo">
-        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools
+      <!-- Root-Absolute Logo Image and Home Link -->
+      <a href="/" class="logo">
+        <img src="/assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools
       </a>
       <nav>
         <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="index.html#tools" class="active">Tools</a></li>
-          <li><a href="index.html#about">About</a></li>
-          <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/#tools" class="active">Tools</a></li>
+          <li><a href="/#about">About</a></li>
+          <li><a href="https://github.com/OpenUtility2/MCTools" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
         </ul>
         <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
           <span></span>
@@ -488,17 +491,17 @@
       </nav>
     </div>
     <div class="mobile-nav-menu">
-      <a href="index.html"><i class="fas fa-home"></i> Home</a>
-      <a href="index.html#tools"><i class="fas fa-tools"></i> Tools</a>
-      <a href="index.html#about"><i class="fas fa-info-circle"></i> About</a>
-      <a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+      <a href="/"><i class="fas fa-home"></i> Home</a>
+      <a href="/#tools"><i class="fas fa-tools"></i> Tools</a>
+      <a href="/#about"><i class="fas fa-info-circle"></i> About</a>
+      <a href="https://github.com/OpenUtility2/MCTools" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
     </div>
   </header>
 
   <main>
     <section class="section">
       <div class="checker-wrapper">
-        <a href="index.html#tools" class="back-link"><i class="fas fa-arrow-left"></i> Back to Tools</a>
+        <a href="/#tools" class="back-link"><i class="fas fa-arrow-left"></i> Back to Tools</a>
 
         <div class="section-header" style="text-align: left; margin-bottom: 24px;">
           <h1 class="section-title">Server Status Checker</h1>
@@ -562,7 +565,7 @@
   <footer class="site-footer">
     <div class="footer-container">
       <h2 class="footer-title">
-        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MCTools
+        <img src="/assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MCTools
       </h2>
       
       <div class="footer-socials">
@@ -582,7 +585,7 @@
       </div>
 
       <div class="footer-nav-inline">
-        <a href="index.html#about">About</a>
+        <a href="/#about">About</a>
         <span class="dot">&bull;</span>
         <div class="openutility-ad-box">
           <span class="ad-label">ads powered by</span>
@@ -598,7 +601,8 @@
     </div>
   </footer>
 
-  <script src="assets/js/main.js"></script>
+  <!-- Root-Absolute JavaScript Path -->
+  <script src="/assets/js/main.js"></script>
   <script>
     function quickCheck(ip) {
       document.getElementById('serverIp').value = ip;
@@ -674,7 +678,7 @@
         }
       } catch (error) {
         loader.style.display = 'none';
-        alert('Failed to connect to status API. Please check your internet connection.');
+        alert('An error occurred while checking the server status.');
       }
     }
   </script>
