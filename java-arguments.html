@@ -3,27 +3,583 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Java Arguments Generator — ServerToolkit</title>
+  <title>Java Arguments Generator — MCTools</title>
   <meta name="description" content="Generate Java startup arguments for Minecraft servers.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/java-arguments.css">
+  <style>
+    /* Minecraft Dark-Purple & Dark-Blue Theme */
+    :root {
+      --mc-purple-bg: #12081f;
+      --mc-purple-dark: #1b0e2d;
+      --mc-panel-bg: #1a102a;
+      --mc-blue-accent: #2b3a67;
+      --mc-blue-dark: #1a2035;
+      --mc-white: #ffffff;
+      --mc-border: #3d2856;
+      --mc-text: #ffffff;
+      --mc-subtext: #b8a8d0;
+    }
+
+    body {
+      background-color: var(--mc-purple-bg);
+      color: var(--mc-text);
+      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(#25143a 15%, transparent 16%), radial-gradient(#1d0e30 15%, transparent 16%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
+    h1, h2, h3, h4, .logo, .tool-page-header h1, .preset-card h3 {
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: -0.5px;
+    }
+
+    .site-header {
+      background: var(--mc-purple-dark);
+      border-bottom: 4px solid var(--mc-blue-accent);
+      box-shadow: 0 4px 0 #000000;
+    }
+
+    .logo {
+      color: var(--mc-subtext) !important;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .site-logo {
+      height: 32px;
+      width: auto;
+      vertical-align: middle;
+    }
+
+    .btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      border-radius: 0;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.4), inset 3px 3px 0px rgba(255, 255, 255, 0.3);
+      padding: 12px 18px;
+      transition: all 0.1s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--mc-blue-accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #3b4e8c;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background-color: #432e5c;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #593e7a;
+    }
+
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 0.65rem;
+    }
+
+    .tool-page-header {
+      padding: 2.5rem 0 1.5rem;
+      border-bottom: 2px solid var(--mc-border);
+      margin-bottom: 2rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--mc-subtext);
+      margin-bottom: 0.75rem;
+    }
+
+    .breadcrumb a {
+      color: var(--mc-text);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .tool-page-header h1 {
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      margin-top: 0.5rem;
+    }
+
+    .tool-page-header p {
+      color: var(--mc-subtext);
+      margin-top: 0.75rem;
+      max-width: 700px;
+      line-height: 1.6;
+    }
+
+    .preset-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .preset-card {
+      background-color: var(--mc-panel-bg);
+      border: 3px solid #000;
+      outline: 2px solid var(--mc-border);
+      box-shadow: 4px 4px 0px #000000;
+      border-radius: 0;
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+
+    .preset-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--mc-blue-accent);
+      box-shadow: 6px 6px 0px #000000;
+    }
+
+    .preset-card.active {
+      border-color: var(--mc-blue-accent);
+      outline-color: var(--mc-blue-accent);
+      box-shadow: inset 0 0 10px rgba(43, 58, 103, 0.4), 6px 6px 0px #000000;
+    }
+
+    .preset-icon {
+      font-size: 2rem;
+      color: var(--mc-subtext);
+      margin-bottom: 0.75rem;
+    }
+
+    .preset-card h3 {
+      font-size: 0.65rem;
+      color: var(--mc-white);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .preset-card p {
+      font-size: 0.8rem;
+      color: var(--mc-subtext);
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .preset-badge {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      background-color: var(--mc-purple-dark);
+      border: 1px solid var(--mc-border);
+      color: var(--mc-white);
+      padding: 4px 8px;
+      display: inline-block;
+    }
+
+    .tool-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .tool-panel {
+      background-color: var(--mc-panel-bg);
+      border: 3px solid #000;
+      outline: 2px solid var(--mc-border);
+      box-shadow: 6px 6px 0px #000000;
+      border-radius: 0;
+      padding: 1.5rem;
+    }
+
+    .tool-panel-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--mc-white);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: var(--mc-text);
+    }
+
+    .version-select-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-select {
+      width: 100%;
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
+      padding: 0.75rem;
+      color: var(--mc-white);
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='%23b8a8d0' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--mc-blue-accent);
+    }
+
+    .loading-spinner {
+      position: absolute;
+      right: 40px;
+      color: var(--mc-subtext);
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .version-status {
+      font-size: 0.75rem;
+      color: var(--mc-subtext);
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Range slider custom styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      height: 8px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #000;
+      background: var(--mc-blue-accent);
+      cursor: pointer;
+      box-shadow: 1px 1px 0px #000;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #000;
+      background: var(--mc-blue-accent);
+      cursor: pointer;
+      box-shadow: 1px 1px 0px #000;
+    }
+
+    .range-value {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      background-color: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      padding: 6px 10px;
+      color: var(--mc-white);
+      white-space: nowrap;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .code-output {
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
+      padding: 1rem;
+      font-family: 'VT323', monospace;
+      font-size: 1.15rem;
+      line-height: 1.4;
+      word-break: break-all;
+      color: var(--mc-white);
+      white-space: pre-wrap;
+      min-height: 100px;
+      box-sizing: border-box;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Custom Checkboxes */
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 0;
+      position: relative;
+    }
+
+    .checkbox-label input[type="checkbox"]:checked::after {
+      content: "\f00c";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: var(--mc-white);
+      font-size: 0.75rem;
+      position: absolute;
+    }
+
+    .checkbox-label input[type="checkbox"]:focus {
+      outline: none;
+      border-color: var(--mc-blue-accent);
+    }
+
+    .checkbox-label span {
+      font-size: 0.875rem;
+      color: var(--mc-text);
+    }
+
+    .advanced-toggle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      background-color: var(--mc-panel-bg);
+      border: 3px solid #000;
+      outline: 2px solid var(--mc-border);
+      box-shadow: 4px 4px 0px #000000;
+      padding: 1rem;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      color: var(--mc-white);
+      cursor: pointer;
+      margin: 2.5rem 0;
+      transition: all 0.15s ease;
+    }
+
+    .advanced-toggle:hover {
+      border-color: var(--mc-blue-accent);
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0px #000000;
+    }
+
+    /* MCTools Footer Styling */
+    .site-footer {
+      background-color: #160e2a;
+      border-top: 1px solid #2d1d47;
+      color: #bfaedc;
+      padding: 3rem 1rem 2rem 1rem;
+      text-align: center;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .footer-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-title {
+      font-size: 2rem;
+      color: #b39ddb;
+      margin: 0;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-socials {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    .footer-socials a {
+      color: #ffffff;
+      background: #1a2035;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .footer-socials a:hover {
+      background: var(--mc-blue-accent);
+      transform: translateY(-2px);
+    }
+
+    .footer-nav-inline {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      color: #e0e0e0;
+    }
+
+    .footer-nav-inline a {
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .footer-nav-inline a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-nav-inline .dot {
+      color: #7e689b;
+    }
+
+    .openutility-ad-box {
+      border: 1px solid #7e689b;
+      border-radius: 8px;
+      padding: 6px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.65rem;
+      position: relative;
+      margin-top: 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .openutility-ad-box .ad-label {
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #160e2a;
+      padding: 0 6px;
+      color: #bfaedc;
+      font-size: 0.55rem;
+      white-space: nowrap;
+    }
+
+    .openutility-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ffffff;
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .openutility-icon {
+      background: #2b3a67;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    .footer-disclaimer {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
+      color: #8c7aa8;
+      line-height: 1.8;
+      max-width: 650px;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .tool-layout {
+        grid-template-columns: 1fr;
+      }
+      .preset-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="logo">
-        <span class="logo-icon"><i class="fas fa-server"></i></span>
-        ServerToolkit
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools
       </a>
       <nav>
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
-          <li><a href="#tools" class="active">Tools</a></li>
-          <li><a href="#about">About</a></li>
+          <li><a href="index.html#tools" class="active">Tools</a></li>
+          <li><a href="index.html#about">About</a></li>
           <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
         </ul>
         <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -35,8 +591,8 @@
     </div>
     <div class="mobile-nav-menu">
       <a href="index.html"><i class="fas fa-home"></i> Home</a>
-      <a href="#tools"><i class="fas fa-tools"></i> Tools</a>
-      <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+      <a href="index.html#tools"><i class="fas fa-tools"></i> Tools</a>
+      <a href="index.html#about"><i class="fas fa-info-circle"></i> About</a>
       <a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
     </div>
   </header>
@@ -155,7 +711,7 @@
         <div class="tool-panel">
           <div class="tool-panel-title"><i class="fas fa-terminal"></i> Generated Startup Command</div>
           <div class="code-output" id="args-output">
-            <span style="color: var(--text-muted);">Configure your settings and click Generate Arguments.</span>
+            <span style="color: var(--mc-subtext);">Configure your settings and click Generate Arguments.</span>
           </div>
           <div class="output-actions">
             <button class="btn btn-secondary btn-sm" id="args-copy"><i class="fas fa-copy"></i> Copy Command</button>
@@ -164,7 +720,7 @@
 
           <div style="margin-top: 1.5rem;">
             <div class="tool-panel-title" style="margin-bottom: 0.75rem;"><i class="fas fa-info-circle"></i> Notes</div>
-            <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6;">
+            <p style="color: var(--mc-subtext); font-size: 0.875rem; line-height: 1.6;">
               Recommended arguments can vary depending on Minecraft version, Java version, server software, and hardware. This generator provides a solid baseline, but you may need to adjust for your specific setup. Always test in a staging environment before using in production.
             </p>
           </div>
@@ -264,7 +820,7 @@
         </div>
 
         <div class="tool-layout">
-          <div class="tool-panel">
+          <div class="tool-panel" style="grid-column: span 2;">
             <div class="tool-panel-title"><i class="fas fa-sliders-h"></i> Advanced Flags</div>
             
             <div class="form-group">
@@ -322,37 +878,41 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="index.html" class="logo">
-            <span class="logo-icon"><i class="fas fa-server"></i></span>
-            ServerToolkit
+    <div class="footer-container">
+      <h2 class="footer-title">
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MCTools
+      </h2>
+      
+      <div class="footer-socials">
+        <a href="https://discord.com" target="_blank" rel="noopener" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://reddit.com" target="_blank" rel="noopener" aria-label="Reddit"><i class="fab fa-reddit-alien"></i></a>
+        <a href="https://ko-fi.com" target="_blank" rel="noopener" aria-label="Ko-fi"><i class="fas fa-mug-hot"></i></a>
+        <a href="mailto:contact@openutility.org" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+
+      <div class="footer-nav-inline">
+        <span>&copy; 2026 MCTools</span>
+        <span class="dot">&bull;</span>
+        <a href="#">Privacy</a>
+        <span class="dot">&bull;</span>
+        <a href="#">Terms</a>
+      </div>
+
+      <div class="footer-nav-inline">
+        <a href="index.html#about">About</a>
+        <span class="dot">&bull;</span>
+        <div class="openutility-ad-box">
+          <span class="ad-label">ads powered by</span>
+          <a href="https://openutility.org" class="openutility-badge" target="_blank" rel="noopener">
+            <span class="openutility-icon">o</span> OpenUtility&reg;
           </a>
-          <p>Free, open-source tools for Minecraft server owners and developers.</p>
-        </div>
-        <div class="footer-links">
-          <h4>Tools</h4>
-          <ul>
-            <li><a href="server-properties.html"><i class="fas fa-sliders-h"></i> Server Properties Editor</a></li>
-            <li><a href="motd.html"><i class="fas fa-palette"></i> MOTD Generator</a></li>
-            <li><a href="java-arguments.html"><i class="fas fa-microchip"></i> Java Arguments</a></li>
-            <li><a href="server-info.html"><i class="fas fa-signal"></i> Server Info</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Project</h4>
-          <ul>
-            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a></li>
-            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fas fa-file-contract"></i> License</a></li>
-            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
-          </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>ServerToolkit v0.1.0</p>
-        <p>&copy; <span class="footer-year">2026</span> ServerToolkit. Open source under MIT License.</p>
-      </div>
+
+      <p class="footer-disclaimer">
+        Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.
+      </p>
     </div>
   </footer>
 
