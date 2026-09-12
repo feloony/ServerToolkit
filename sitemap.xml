@@ -5,7 +5,19 @@
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://mctools.wiki.gd/server-properties</loc>
+    <loc>https://mctools.wiki.gd/server-properties.html</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://mctools.wiki.gd/motd.html</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://mctools.wiki.gd/java-arguments.html</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://mctools.wiki.gd/mc-checker.html</loc>
     <priority>0.80</priority>
   </url>
 </urlset>
