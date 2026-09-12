@@ -33,7 +33,6 @@
   <link rel="stylesheet" href="/assets/css/style.css">
 
   <style>
-    /* Minecraft Dark-Purple & Dark-Blue Theme Override */
     :root {
       --mc-purple-bg: #12081f;
       --mc-purple-dark: #1b0e2d;
@@ -234,7 +233,18 @@
       justify-content: center;
       align-items: center;
       position: relative;
-      min-height: 400px;
+      min-height: 380px;
+      overflow: hidden;
+    }
+
+    #skinCanvas {
+      width: 100% !important;
+      height: 100% !important;
+      cursor: grab;
+    }
+
+    #skinCanvas:active {
+      cursor: grabbing;
     }
 
     .canvas-controls {
@@ -267,7 +277,7 @@
       display: none;
       text-align: center;
       color: var(--mc-subtext);
-      padding: 24px 0;
+      padding: 16px 0;
       font-weight: 500;
       font-family: 'Press Start 2P', monospace;
       font-size: 0.75rem;
@@ -426,9 +436,9 @@
     }
   </style>
 
-  <!-- Skinview3d & Three.js Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://unpkg.com/skinview3d@3.0.0/bundles/skinview3d.bundle.js"></script>
+  <!-- Stable Three.js and Skinview3d CDN Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.137.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/skinview3d@2.4.0/bundles/skinview3d.bundle.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -465,13 +475,13 @@
 
         <div class="section-header" style="text-align: left; margin-bottom: 24px;">
           <h1 class="section-title">Minecraft Skin Viewer</h1>
-          <p class="section-subtitle">Inspect 3D Minecraft player models, inspect capes, toggle animations, and download raw skin textures.</p>
+          <p class="section-subtitle">Inspect 3D Minecraft player models, inspect capes, toggle animations, and download skin textures.</p>
         </div>
 
         <div class="checker-card">
           <label for="usernameInput" style="font-weight: 600; color: #f1f5f9; font-size: 0.8rem; font-family: 'Press Start 2P', monospace;">Player Username</label>
           <div class="input-group">
-            <input type="text" id="usernameInput" placeholder="e.g. Notch, Technoblade, or Dream" onkeydown="if(event.key==='Enter') loadPlayerSkin()" />
+            <input type="text" id="usernameInput" placeholder="e.g. Notch, Technoblade, or Steve" onkeydown="if(event.key==='Enter') loadPlayerSkin()" />
             <button class="btn btn-primary" onclick="loadPlayerSkin()"><i class="fas fa-search"></i> Inspect</button>
           </div>
 
@@ -483,7 +493,7 @@
             <button class="preset-btn" onclick="quickLoad('Jeb_')">Jeb_</button>
           </div>
 
-          <div class="loader" id="loader"><i class="fas fa-spinner fa-spin"></i> Fetching player model and skin textures...</div>
+          <div class="loader" id="loader"><i class="fas fa-spinner fa-spin"></i> Fetching player model...</div>
 
           <div class="viewer-layout">
             <div class="skin-canvas-box">
@@ -504,7 +514,6 @@
                 <div class="panel-title">Model Options</div>
                 <div class="controls-grid">
                   <button class="btn btn-secondary active" id="btnOuter" onclick="toggleOuterLayer()"><i class="fas fa-layer-group"></i> Outer Layer</button>
-                  <button class="btn btn-secondary" id="btnCape" onclick="toggleCape()"><i class="fas fa-shield-alt"></i> Cape</button>
                 </div>
               </div>
 
@@ -568,15 +577,21 @@
     let isOuterActive = true;
 
     window.addEventListener('DOMContentLoaded', () => {
-      skinViewer = new skinview3d.SkinViewer({
-        canvas: document.getElementById('skinCanvas'),
-        width: 300,
-        height: 380,
-        skin: 'https://crafatar.com/skins/8667ba71-b85a-4004-af54-413a9f828d30'
-      });
+      try {
+        const canvas = document.getElementById('skinCanvas');
+        skinViewer = new skinview3d.SkinViewer({
+          canvas: canvas,
+          width: 300,
+          height: 380,
+          skin: 'https://mc-heads.net/skin/Steve'
+        });
 
-      skinViewer.autoRotate = true;
-      skinViewer.camera.position.set(0, 10, 40);
+        skinViewer.autoRotate = true;
+        skinViewer.camera.position.set(0, 10, 40);
+        skinViewer.fov = 70;
+      } catch (err) {
+        console.error('WebGL Initialization Error:', err);
+      }
     });
 
     function quickLoad(username) {
@@ -588,17 +603,16 @@
       const username = document.getElementById('usernameInput').value.trim();
       const loader = document.getElementById('loader');
 
-      if (!username) return;
+      if (!username || !skinViewer) return;
 
       loader.style.display = 'block';
 
       try {
         currentUsername = username;
-        const skinUrl = `https://minotar.net/skin/${username}`;
-        const capeUrl = `https://crafatar.com/capes/${username}`;
-
+        // Direct reliable CORS-friendly skin provider
+        const skinUrl = `https://mc-heads.net/skin/${encodeURIComponent(username)}`;
+        
         await skinViewer.loadSkin(skinUrl);
-        skinViewer.loadCape(capeUrl).catch(() => {});
 
         loader.style.display = 'none';
       } catch (err) {
@@ -608,24 +622,38 @@
     }
 
     function toggleRotate() {
+      if (!skinViewer) return;
       isRotating = !isRotating;
       skinViewer.autoRotate = isRotating;
       document.getElementById('btnRotate').classList.toggle('active', isRotating);
     }
 
     function toggleWalk() {
-      skinViewer.animation = skinViewer.animation instanceof skinview3d.WalkingAnimation ? null : new skinview3d.WalkingAnimation();
-      document.getElementById('btnWalk').classList.toggle('active', skinViewer.animation !== null);
+      if (!skinViewer) return;
+      if (skinViewer.animations.walk) {
+        skinViewer.animations.walk.paused = !skinViewer.animations.walk.paused;
+        if (skinViewer.animations.run) skinViewer.animations.run.paused = true;
+      } else {
+        skinViewer.animations.add(skinview3d.WalkingAnimation);
+      }
+      document.getElementById('btnWalk').classList.toggle('active');
       document.getElementById('btnRun').classList.remove('active');
     }
 
     function toggleRun() {
-      skinViewer.animation = skinViewer.animation instanceof skinview3d.RunningAnimation ? null : new skinview3d.RunningAnimation();
-      document.getElementById('btnRun').classList.toggle('active', skinViewer.animation !== null);
+      if (!skinViewer) return;
+      if (skinViewer.animations.run) {
+        skinViewer.animations.run.paused = !skinViewer.animations.run.paused;
+        if (skinViewer.animations.walk) skinViewer.animations.walk.paused = true;
+      } else {
+        skinViewer.animations.add(skinview3d.RunningAnimation);
+      }
+      document.getElementById('btnRun').classList.toggle('active');
       document.getElementById('btnWalk').classList.remove('active');
     }
 
     function toggleOuterLayer() {
+      if (!skinViewer) return;
       isOuterActive = !isOuterActive;
       skinViewer.playerObject.skin.innerLayer.visible = true;
       skinViewer.playerObject.skin.outerLayer.visible = isOuterActive;
@@ -635,10 +663,9 @@
     function downloadSkin() {
       const link = document.createElement('a');
       link.download = `${currentUsername}_skin.png`;
-      link.href = `https://minotar.net/skin/${currentUsername}`;
+      link.href = `https://mc-heads.net/download/${encodeURIComponent(currentUsername)}`;
       link.click();
     }
   </script>
 </body>
-  </html>
-        
+</html>
