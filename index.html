@@ -3,20 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ServerToolkit — Minecraft Server Tools</title>
+  <title>MC Tools — Minecraft Web Utilities</title>
   <meta name="description" content="Free, open-source tools for Minecraft server owners and developers.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* Minecraft Theme Overrides */
+    :root {
+      --mc-dirt-dark: #1e1915;
+      --mc-stone-dark: #2c2d2d;
+      --mc-panel-bg: #212121;
+      --mc-grass-green: #55ff55;
+      --mc-emerald: #00aa00;
+      --mc-gold: #ffaa00;
+      --mc-border: #3c3c3c;
+      --mc-text: #ffffff;
+      --mc-subtext: #aaaaaa;
+    }
+
+    body {
+      background-color: var(--mc-dirt-dark);
+      color: var(--mc-text);
+      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(#2a221c 15%, transparent 16%), radial-gradient(#251e18 15%, transparent 16%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
+    h1, h2, h3, .logo {
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: -0.5px;
+    }
+
+    .site-header {
+      background: #111111;
+      border-bottom: 4px solid var(--mc-emerald);
+      box-shadow: 0 4px 0 #000000;
+    }
+
+    .logo {
+      color: var(--mc-grass-green) !important;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      border-radius: 0;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.4), inset 3px 3px 0px rgba(255, 255, 255, 0.3);
+      padding: 12px 18px;
+      transition: all 0.1s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--mc-emerald);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--mc-grass-green);
+      color: #000;
+    }
+
+    .btn-secondary {
+      background-color: #555555;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #777777;
+    }
+
+    .card, .feature-card, .about-section {
+      background-color: var(--mc-panel-bg);
+      border: 3px solid #000;
+      outline: 2px solid #3c3c3c;
+      box-shadow: 6px 6px 0px #000000;
+      border-radius: 0;
+    }
+
+    .card-title, .feature-title, .section-title {
+      color: var(--mc-gold);
+    }
+
+    .card-icon, .feature-icon, .logo-icon {
+      color: var(--mc-grass-green);
+    }
+
+    .site-footer {
+      background-color: #0d0d0d;
+      border-top: 4px solid var(--mc-border);
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="logo">
-        <span class="logo-icon"><i class="fas fa-server"></i></span>
-        ServerToolkit
+        <span class="logo-icon"><i class="fas fa-cube"></i></span>
+        MC Tools
       </a>
       <nav>
         <ul class="nav-links">
@@ -44,7 +135,7 @@
     <section class="hero">
       <div class="container">
         <h1>Everything you need to Manage your Minecraft server.</h1>
-        <p>ServerToolkit provides free, tools for Minecraft server owners and developers. No account required. Everything runs in your browser.</p>
+        <p>MC Tools provides free utilities for Minecraft server owners and developers. No account required. Everything runs in your browser.</p>
         <div class="hero-actions">
           <a href="#tools" class="btn btn-primary"><i class="fas fa-wrench"></i> Explore Tools</a>
           <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-secondary"><i class="fab fa-github"></i> Open Source</a>
@@ -90,7 +181,7 @@
     <section class="section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Why ServerToolkit?</h2>
+          <h2 class="section-title">Why MC Tools?</h2>
           <p class="section-subtitle">Built by OpenUtility for server owners.</p>
         </div>
         <div class="features-grid">
@@ -143,8 +234,8 @@
     <section id="about" class="section about-section">
       <div class="container">
         <div class="about-content">
-          <h2 class="section-title">About ServerToolkit</h2>
-          <p>ServerToolkit, created by OpenUtility, is an open-source suite of powerful tools designed to streamline Minecraft server management. Instead of hunting down individual utilities for daily administrative tasks, server owners can manage everything seamlessly from one centralized website.</p>
+          <h2 class="section-title">About MC Tools</h2>
+          <p>MC Tools, created by OpenUtility, is an open-source suite of powerful tools designed to streamline Minecraft server management. Instead of hunting down individual utilities for daily administrative tasks, server owners can manage everything seamlessly from one centralized website.</p>
           <p>Every tool runs locally in your browser. No data is sent to external servers.</p>
           <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-primary"><i class="fab fa-github"></i> View on GitHub</a>
         </div>
@@ -157,7 +248,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="index.html" class="logo">
-            <span class="logo-icon"><i class="fas fa-server"></i></span>
+            <span class="logo-icon"><i class="fas fa-cube"></i></span>
             OpenUtility 
           </a>
           <p>Free, accessible open-source web tools for everyone.</p>
