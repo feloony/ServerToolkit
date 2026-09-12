@@ -1,0 +1,53 @@
+name: Deploy Clean URLs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Reorganize HTML into Clean Folders
+        run: |
+          mkdir -p build
+          cp -r assets build/ 2>/dev/null || true
+          cp index.html build/
+          cp 404.html build/ 2>/dev/null || true
+
+          for file in *.html; do
+            if [ "$file" != "index.html" ] && [ "$file" != "404.html" ]; then
+              folder="${file%.html}"
+              mkdir -p "build/$folder"
+              cp "$file" "build/$folder/index.html"
+            fi
+          done
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './build'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
