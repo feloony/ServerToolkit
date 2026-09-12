@@ -3,61 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Server Status Checker — ServerToolkit</title>
+  <title>Server Status Checker — MCTools</title>
   <meta name="description" content="Check real-time status, MOTD, version, and live player count of any Minecraft server.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
+    /* Minecraft Dark-Purple & Dark-Blue Theme */
+    :root {
+      --mc-purple-bg: #12081f;
+      --mc-purple-dark: #1b0e2d;
+      --mc-panel-bg: #1a102a;
+      --mc-blue-accent: #2b3a67;
+      --mc-blue-dark: #1a2035;
+      --mc-white: #ffffff;
+      --mc-border: #3d2856;
+      --mc-text: #ffffff;
+      --mc-subtext: #b8a8d0;
+    }
+
+    body {
+      background-color: var(--mc-purple-bg);
+      color: var(--mc-text);
+      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(#25143a 15%, transparent 16%), radial-gradient(#1d0e30 15%, transparent 16%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
+    h1, h2, h3, h4, .logo, .section-title {
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: -0.5px;
+    }
+
+    .site-header {
+      background: var(--mc-purple-dark);
+      border-bottom: 4px solid var(--mc-blue-accent);
+      box-shadow: 0 4px 0 #000000;
+    }
+
+    .logo {
+      color: var(--mc-subtext) !important;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .site-logo {
+      height: 32px;
+      width: auto;
+      vertical-align: middle;
+    }
+
     .checker-wrapper {
       max-width: 800px;
       margin: 0 auto;
       padding: 0 16px;
     }
+
     .back-link {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: #8b95a7;
+      color: var(--mc-subtext);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 500;
       margin-bottom: 24px;
       transition: color 0.2s;
     }
+
     .back-link:hover {
-      color: #6366f1;
+      color: var(--mc-white);
+      text-decoration: underline;
     }
+
+    .section-title {
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-subtitle {
+      color: var(--mc-subtext);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
     .checker-card {
-      background: rgba(18, 22, 31, 0.8);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
+      background-color: var(--mc-panel-bg);
+      border: 3px solid #000;
+      outline: 2px solid var(--mc-border);
+      box-shadow: 6px 6px 0px #000000;
+      border-radius: 0;
       padding: 32px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
+
     .input-group {
       display: flex;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 16px;
     }
+
     .input-group input {
       flex: 1;
       padding: 14px 18px;
-      background: rgba(9, 11, 14, 0.8);
-      border: 1px solid #232b3e;
-      border-radius: 12px;
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
       outline: none;
       transition: all 0.2s ease;
     }
+
     .input-group input:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      border-color: var(--mc-blue-accent);
     }
+
+    .btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      border-radius: 0;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.4), inset 3px 3px 0px rgba(255, 255, 255, 0.3);
+      padding: 12px 18px;
+      transition: all 0.1s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--mc-blue-accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #3b4e8c;
+      color: #fff;
+    }
+
     .presets {
       display: flex;
       align-items: center;
@@ -65,141 +155,308 @@
       margin-top: 16px;
       flex-wrap: wrap;
     }
+
     .preset-label {
-      font-size: 0.8rem;
-      color: #64748b;
+      font-size: 0.75rem;
+      color: var(--mc-subtext);
       font-weight: 600;
       text-transform: uppercase;
+      font-family: 'Press Start 2P', monospace;
     }
+
     .preset-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      color: #cbd5e1;
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
+      color: var(--mc-white);
       padding: 6px 12px;
       font-size: 0.82rem;
       cursor: pointer;
       transition: all 0.2s ease;
     }
+
     .preset-btn:hover {
-      background: rgba(99, 102, 241, 0.15);
-      border-color: #6366f1;
+      background: var(--mc-blue-accent);
+      border-color: var(--mc-blue-accent);
       color: #fff;
     }
+
     .result-box {
       display: none;
-      background: rgba(9, 11, 14, 0.9);
-      border: 1px solid #1e2638;
-      border-radius: 16px;
+      background: var(--mc-purple-dark);
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
       padding: 24px;
       margin-top: 28px;
       animation: fadeIn 0.3s ease-out forwards;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     .status-header {
       display: flex;
       align-items: center;
       gap: 16px;
       margin-bottom: 20px;
       padding-bottom: 20px;
-      border-bottom: 1px solid #1e2638;
+      border-bottom: 2px solid var(--mc-border);
     }
+
     .server-icon {
       width: 56px;
       height: 56px;
-      border-radius: 12px;
-      background: #12161f;
-      border: 1px solid #232b3e;
+      border-radius: 0;
+      background: #000;
+      border: 2px solid var(--mc-border);
       object-fit: contain;
+      image-rendering: pixelated;
     }
+
     .badge {
       display: inline-block;
       padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
+      border-radius: 0;
+      font-size: 0.65rem;
+      font-family: 'Press Start 2P', monospace;
       text-transform: uppercase;
-      margin-top: 4px;
+      margin-top: 6px;
     }
+
     .online {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(16, 185, 129, 0.2);
       color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      border: 2px solid #10b981;
     }
+
     .offline {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(239, 68, 68, 0.2);
       color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      border: 2px solid #ef4444;
     }
+
     .info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 12px;
       margin-bottom: 20px;
     }
+
     .info-box {
-      background: #12161f;
+      background: var(--mc-panel-bg);
       padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid #1e2638;
+      border-radius: 0;
+      border: 2px solid var(--mc-border);
     }
+
     .info-label {
-      font-size: 0.75rem;
-      color: #8b95a7;
+      font-size: 0.65rem;
+      color: var(--mc-subtext);
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      font-family: 'Press Start 2P', monospace;
     }
+
     .info-value {
       font-size: 1rem;
       font-weight: 600;
       color: #f1f5f9;
     }
+
     .progress-bar-container {
       width: 100%;
-      height: 6px;
-      background: #1e2638;
-      border-radius: 3px;
-      margin-top: 6px;
+      height: 8px;
+      background: #000;
+      border: 1px solid var(--mc-border);
+      border-radius: 0;
+      margin-top: 8px;
       overflow: hidden;
     }
+
     .progress-bar {
       height: 100%;
-      background: linear-gradient(90deg, #6366f1, #10b981);
+      background: var(--mc-blue-accent);
       width: 0%;
       transition: width 0.4s ease;
     }
+
     .motd-container {
       margin-top: 16px;
     }
+
     .motd-label {
-      font-size: 0.75rem;
-      color: #8b95a7;
+      font-size: 0.65rem;
+      color: var(--mc-subtext);
       text-transform: uppercase;
       margin-bottom: 8px;
+      font-family: 'Press Start 2P', monospace;
     }
+
     .motd-box {
       background: #000000;
-      border: 1px solid #1e2638;
-      border-radius: 10px;
+      border: 2px solid var(--mc-border);
+      border-radius: 0;
       padding: 16px;
-      font-family: 'Minecraft', 'Courier New', monospace;
-      font-size: 1rem;
+      font-family: 'VT323', monospace;
+      font-size: 1.25rem;
       color: #ffffff;
       white-space: pre-wrap;
       word-break: break-word;
-      line-height: 1.5;
+      line-height: 1.4;
       text-shadow: 2px 2px 0px #000000;
     }
+
     .loader {
       display: none;
       text-align: center;
-      color: #8b95a7;
+      color: var(--mc-subtext);
       padding: 20px 0;
       font-weight: 500;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
     }
+
+    /* MCTools Footer Styling */
+    .site-footer {
+      background-color: #160e2a;
+      border-top: 1px solid #2d1d47;
+      color: #bfaedc;
+      padding: 3rem 1rem 2rem 1rem;
+      text-align: center;
+      font-family: 'Press Start 2P', monospace;
+      margin-top: 4rem;
+    }
+
+    .footer-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-title {
+      font-size: 2rem;
+      color: #b39ddb;
+      margin: 0;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-socials {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    .footer-socials a {
+      color: #ffffff;
+      background: #1a2035;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .footer-socials a:hover {
+      background: var(--mc-blue-accent);
+      transform: translateY(-2px);
+    }
+
+    .footer-nav-inline {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      color: #e0e0e0;
+    }
+
+    .footer-nav-inline a {
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .footer-nav-inline a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-nav-inline .dot {
+      color: #7e689b;
+    }
+
+    .openutility-ad-box {
+      border: 1px solid #7e689b;
+      border-radius: 8px;
+      padding: 6px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.65rem;
+      position: relative;
+      margin-top: 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .openutility-ad-box .ad-label {
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #160e2a;
+      padding: 0 6px;
+      color: #bfaedc;
+      font-size: 0.55rem;
+      white-space: nowrap;
+    }
+
+    .openutility-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ffffff;
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .openutility-icon {
+      background: #2b3a67;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    .footer-disclaimer {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
+      color: #8c7aa8;
+      line-height: 1.8;
+      max-width: 650px;
+      margin-top: 1rem;
+    }
+
     @media (max-width: 600px) {
       .input-group {
         flex-direction: column;
@@ -214,13 +471,12 @@
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="logo">
-        <span class="logo-icon"><i class="fas fa-server"></i></span>
-        ServerToolkit
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MC Tools
       </a>
       <nav>
         <ul class="nav-links">
-          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-          <li><a href="index.html#tools" class="active"><i class="fas fa-tools"></i> All Tools</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#tools" class="active">Tools</a></li>
           <li><a href="index.html#about">About</a></li>
           <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-github"></i> GitHub</a></li>
         </ul>
@@ -233,7 +489,7 @@
     </div>
     <div class="mobile-nav-menu">
       <a href="index.html"><i class="fas fa-home"></i> Home</a>
-      <a href="index.html#tools"><i class="fas fa-tools"></i> All Tools</a>
+      <a href="index.html#tools"><i class="fas fa-tools"></i> Tools</a>
       <a href="index.html#about"><i class="fas fa-info-circle"></i> About</a>
       <a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
     </div>
@@ -250,14 +506,14 @@
         </div>
 
         <div class="checker-card">
-          <label for="serverIp" style="font-weight: 600; color: #f1f5f9; font-size: 0.95rem;">Enter Server IP Address</label>
+          <label for="serverIp" style="font-weight: 600; color: #f1f5f9; font-size: 0.9rem; font-family: 'Press Start 2P', monospace;">Enter Server IP Address</label>
           <div class="input-group">
             <input type="text" id="serverIp" placeholder="e.g. play.hypixel.net or jartex.fun" onkeydown="if(event.key==='Enter') checkStatus()" />
-            <button class="btn btn-primary" onclick="checkStatus()"><i class="fas fa-search"></i> Check Server</button>
+            <button class="btn btn-primary" onclick="checkStatus()"><i class="fas fa-search"></i> Check</button>
           </div>
 
           <div class="presets">
-            <span class="preset-label">Try popular:</span>
+            <span class="preset-label">Presets:</span>
             <button class="preset-btn" onclick="quickCheck('mc.hypixel.net')">Hypixel</button>
             <button class="preset-btn" onclick="quickCheck('top.jartex.fun')">Jartex</button>
             <button class="preset-btn" onclick="quickCheck('play.minemen.club')">Minemen</button>
@@ -270,7 +526,7 @@
             <div class="status-header">
               <img id="serverIcon" class="server-icon" src="" alt="Server Icon" />
               <div>
-                <div id="serverHost" style="font-weight: 700; font-size: 1.2rem; color: #fff;">-</div>
+                <div id="serverHost" style="font-family: 'Press Start 2P', monospace; font-size: 0.9rem; color: #fff;">-</div>
                 <span id="statusBadge" class="badge">-</span>
               </div>
             </div>
@@ -304,37 +560,41 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="index.html" class="logo">
-            <span class="logo-icon"><i class="fas fa-server"></i></span>
-            VoxelHosting 
+    <div class="footer-container">
+      <h2 class="footer-title">
+        <img src="assets/images/logo.png" alt="MC Tools Logo" class="site-logo"> MCTools
+      </h2>
+      
+      <div class="footer-socials">
+        <a href="https://discord.com" target="_blank" rel="noopener" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://reddit.com" target="_blank" rel="noopener" aria-label="Reddit"><i class="fab fa-reddit-alien"></i></a>
+        <a href="https://ko-fi.com" target="_blank" rel="noopener" aria-label="Ko-fi"><i class="fas fa-mug-hot"></i></a>
+        <a href="mailto:contact@openutility.org" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+
+      <div class="footer-nav-inline">
+        <span>&copy; 2026 MCTools</span>
+        <span class="dot">&bull;</span>
+        <a href="#">Privacy</a>
+        <span class="dot">&bull;</span>
+        <a href="#">Terms</a>
+      </div>
+
+      <div class="footer-nav-inline">
+        <a href="index.html#about">About</a>
+        <span class="dot">&bull;</span>
+        <div class="openutility-ad-box">
+          <span class="ad-label">ads powered by</span>
+          <a href="https://openutility.org" class="openutility-badge" target="_blank" rel="noopener">
+            <span class="openutility-icon">o</span> OpenUtility&reg;
           </a>
-          <p>Free, 24/7 Minecraft and Discord Hosting..</p>
-        </div>
-        <div class="footer-links">
-          <h4>Tools</h4>
-          <ul>
-            <li><a href="server-properties.html"><i class="fas fa-sliders-h"></i> Server Properties Editor</a></li>
-            <li><a href="motd.html"><i class="fas fa-palette"></i> MOTD Generator</a></li>
-            <li><a href="java-arguments.html"><i class="fas fa-microchip"></i> Java Arguments</a></li>
-            <li><a href="mc-checker.html"><i class="fas fa-signal"></i> Server Status Checker</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Project</h4>
-          <ul>
-            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a></li>
-            <li><a href="https://github.com" target="_blank" rel="noopener"><i class="fas fa-file-contract"></i> License</a></li>
-            <li><a href="index.html#about"><i class="fas fa-info-circle"></i> About</a></li>
-          </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>Made With ♥️ by VoxelHosting</p>
-        <p>&copy; <span class="footer-year">2026</span> VoxelHosting. Open source under MIT License.</p>
-      </div>
+
+      <p class="footer-disclaimer">
+        Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.
+      </p>
     </div>
   </footer>
 
